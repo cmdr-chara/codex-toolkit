@@ -17,9 +17,15 @@ A growing collection of reusable Codex skills, custom agents, and installation h
 | `sentinel-reader` | GPT-5.6 Sol | XHigh | Read-only |
 | `architect-writer` | GPT-5.6 Sol | XHigh | Workspace write |
 
-## Install
+## Install with npx
 
-Run from PowerShell:
+Install the skill and all six custom agents:
+
+```shell
+npx --yes github:cmdr-chara/codex-toolkit
+```
+
+Alternatively, run the PowerShell installer from a cloned checkout:
 
 ```powershell
 .\scripts\install-mission-control.ps1

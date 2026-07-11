@@ -1,0 +1,20 @@
+{
+  "name": "codex-toolkit",
+  "version": "0.1.0",
+  "description": "Reusable Codex skills, custom agents, and installation helpers",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "codex-toolkit": "bin/install.mjs"
+  },
+  "files": [
+    "agents",
+    "bin",
+    "skills",
+    "LICENSE",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  }
+}
