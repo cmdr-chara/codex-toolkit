@@ -1,0 +1,9 @@
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+.env
+auth.json
+sessions/
+archived_sessions/
+memories/

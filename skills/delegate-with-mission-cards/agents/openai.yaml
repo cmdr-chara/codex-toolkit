@@ -1,0 +1,4 @@
+interface:
+  display_name: "Mission Control"
+  short_description: "Delegate bounded work with mission cards and verify every result"
+  default_prompt: "Decompose suitable work into independent, bounded mission cards. Assign each mission to the lightest capable role: pathfinder-reader, investigator-reader, sentinel-reader, patcher-writer, builder-writer, or architect-writer. Run only safe parallel waves, then integrate and independently validate every result."
