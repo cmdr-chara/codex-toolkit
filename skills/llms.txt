@@ -1,0 +1,1 @@
+delegate-with-mission-cards: Mission Control for bounded multi-agent work. Gate delegation, select the lightest capable reader or writer, issue scoped mission cards, run safe parallel waves, and independently verify every handoff. The full toolkit installer also provides Luna, Terra, and Sol custom-agent roles.

@@ -2,6 +2,16 @@
   "name": "codex-toolkit",
   "version": "0.1.0",
   "description": "Reusable Codex skills, custom agents, and installation helpers",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cmdr-chara/codex-toolkit.git"
+  },
+  "keywords": [
+    "codex",
+    "agent-skills",
+    "subagents",
+    "multi-agent"
+  ],
   "license": "MIT",
   "type": "module",
   "bin": {
@@ -11,6 +21,7 @@
     "agents",
     "bin",
     "skills",
+    "CHANGELOG.md",
     "LICENSE",
     "README.md"
   ],

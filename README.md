@@ -17,15 +17,33 @@ A growing collection of reusable Codex skills, custom agents, and installation h
 | `sentinel-reader` | GPT-5.6 Sol | XHigh | Read-only |
 | `architect-writer` | GPT-5.6 Sol | XHigh | Workspace write |
 
-## Install with npx
+## Installing
 
-Install the skill and all six custom agents:
+### Full Mission Control bundle
+
+Install the skill and all six model-routed custom agents:
 
 ```shell
 npx --yes github:cmdr-chara/codex-toolkit
 ```
 
-Alternatively, run the PowerShell installer from a cloned checkout:
+### Skill only
+
+Install the portable Agent Skill without the custom model-routing agents:
+
+```shell
+npx skills add https://github.com/cmdr-chara/codex-toolkit --skill "delegate-with-mission-cards" -g
+```
+
+List the skills available in this repository:
+
+```shell
+npx skills add https://github.com/cmdr-chara/codex-toolkit --list
+```
+
+### Cloned checkout
+
+Run the PowerShell installer:
 
 ```powershell
 .\scripts\install-mission-control.ps1
@@ -36,6 +54,16 @@ The installer backs up conflicting files before installing into `~/.codex`. Star
 ```text
 Use $delegate-with-mission-cards to handle this task.
 ```
+
+## Skills
+
+Each skill has one stable install name. More skills can be added without changing existing install commands.
+
+| Skill folder | Install name | Description |
+| --- | --- | --- |
+| `delegate-with-mission-cards` | `delegate-with-mission-cards` | Mission-gated delegation with specialized readers and writers, safe parallel waves, and parent-side verification |
+
+See [`skills/llms.txt`](skills/llms.txt) for the compact machine-readable catalog and [`CHANGELOG.md`](CHANGELOG.md) for release notes.
 
 ## Safety
 
