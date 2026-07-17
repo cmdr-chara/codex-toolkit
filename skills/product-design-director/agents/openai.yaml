@@ -1,0 +1,4 @@
+interface:
+  display_name: "Product Design Director"
+  short_description: "Direct product UX and visual systems"
+  default_prompt: "Use $product-design-director to define a coherent product UX and visual direction for this brief."

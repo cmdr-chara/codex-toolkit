@@ -1,0 +1,188 @@
+{
+  "schema_version": 1,
+  "information_checked": "2026-07-17",
+  "cases": [
+    {
+      "id": "overlap-01",
+      "prompt": "Map the monorepo, then split a checkout change across four agents with non-overlapping writes.",
+      "expected_sequence": [
+        "repository-intelligence",
+        "multi-agent-work-coordinator"
+      ],
+      "primary_decision": "Analyze before delegating.",
+      "anti_route": "The coordinator must not invent boundaries that repository-intelligence has not evidenced."
+    },
+    {
+      "id": "overlap-02",
+      "prompt": "We already have a repository impact report. Assign agents, waves, single-owner lockfile work, and integration order.",
+      "expected_sequence": [
+        "multi-agent-work-coordinator"
+      ],
+      "primary_decision": "The map exists; delegation is now the owned decision.",
+      "anti_route": "Do not rerun a broad repository audit unless assumptions are stale or incomplete."
+    },
+    {
+      "id": "overlap-03",
+      "prompt": "An Expo SDK upgrade caused an unexplained crash. Find the cause and then plan the supported migration.",
+      "expected_sequence": [
+        "debugging-investigator",
+        "codebase-evolution-controller",
+        "expo-react-native-builder",
+        "verification-and-release"
+      ],
+      "primary_decision": "Unknown cause first; version transition second; platform implementation third; integrated gate last.",
+      "anti_route": "Do not downgrade or upgrade blindly as a debugging experiment."
+    },
+    {
+      "id": "overlap-04",
+      "prompt": "Upgrade Next.js, update the changed API docs, and decide whether the integrated release can ship.",
+      "expected_sequence": [
+        "codebase-evolution-controller",
+        "documentation-synchronizer",
+        "verification-and-release"
+      ],
+      "primary_decision": "Evolution owns transition; docs owns drift; release owns final evidence.",
+      "anti_route": "The web builder may supply feature checks but cannot self-approve the integrated release."
+    },
+    {
+      "id": "overlap-05",
+      "prompt": "Define a new visual direction, reconstruct one approved reference screen, and implement a production web flow.",
+      "expected_sequence": [
+        "product-design-director",
+        "screenshot-to-interface",
+        "production-web-builder"
+      ],
+      "primary_decision": "Direction, reconstruction, and production implementation are distinct handoffs.",
+      "anti_route": "Do not use a screenshot to replace unresolved product direction."
+    },
+    {
+      "id": "overlap-06",
+      "prompt": "The screenshot matches, but keyboard focus, error recovery, caching, and telemetry are missing.",
+      "expected_sequence": [
+        "production-web-builder"
+      ],
+      "primary_decision": "Reference fidelity is complete; production concerns remain.",
+      "anti_route": "Do not reopen visual reconstruction unless a fidelity defect is observed."
+    },
+    {
+      "id": "overlap-07",
+      "prompt": "Choose Flutter or Expo for the app, then implement the selected stack.",
+      "expected_sequence": [
+        "mobile-architecture-director",
+        "flutter-production-builder|expo-react-native-builder"
+      ],
+      "primary_decision": "Selection precedes execution.",
+      "anti_route": "A platform builder must not silently choose the platform from familiarity."
+    },
+    {
+      "id": "overlap-08",
+      "prompt": "Flutter is fixed by contract. Upgrade its routing package and update migration docs.",
+      "expected_sequence": [
+        "codebase-evolution-controller",
+        "flutter-production-builder",
+        "documentation-synchronizer"
+      ],
+      "primary_decision": "Evolution controls version transition; Flutter builder supplies platform checks; docs synchronizes behavior.",
+      "anti_route": "Do not invoke mobile-architecture-director because the platform choice is not open."
+    },
+    {
+      "id": "overlap-09",
+      "prompt": "A flaky release test fails in CI. Determine why, then reassess release readiness.",
+      "expected_sequence": [
+        "debugging-investigator",
+        "verification-and-release"
+      ],
+      "primary_decision": "Diagnose evidence integrity before the gate.",
+      "anti_route": "A rerun-to-green result is not sufficient release evidence."
+    },
+    {
+      "id": "overlap-10",
+      "prompt": "Map docs affected by an API schema migration and include them in the migration sequence.",
+      "expected_sequence": [
+        "repository-intelligence",
+        "codebase-evolution-controller",
+        "documentation-synchronizer"
+      ],
+      "primary_decision": "Repository map finds consumers/surfaces; evolution sequences the contract; docs repairs communication.",
+      "anti_route": "Documentation does not decide the API compatibility model."
+    },
+    {
+      "id": "overlap-11",
+      "prompt": "Two agents both need package.json and the generated lockfile during a web feature.",
+      "expected_sequence": [
+        "multi-agent-work-coordinator",
+        "production-web-builder"
+      ],
+      "primary_decision": "Coordinator makes shared manifests/lockfiles single-owner; builder implements within ownership.",
+      "anti_route": "Do not allow both writers and rely on merge conflict resolution."
+    },
+    {
+      "id": "overlap-12",
+      "prompt": "Redesign this page based on existing product evidence, with no supplied visual reference.",
+      "expected_sequence": [
+        "product-design-director"
+      ],
+      "primary_decision": "Audit and direction are primary without a reference image.",
+      "anti_route": "Do not trigger screenshot-to-interface on the word redesign alone."
+    },
+    {
+      "id": "overlap-13",
+      "prompt": "Use this screenshot only as a layout reference; the brand system is already approved.",
+      "expected_sequence": [
+        "screenshot-to-interface"
+      ],
+      "primary_decision": "Direction is settled; reconstruct evidence.",
+      "anti_route": "Do not invent a new brand direction."
+    },
+    {
+      "id": "overlap-14",
+      "prompt": "Implement auth in Expo and verify its final store release.",
+      "expected_sequence": [
+        "expo-react-native-builder",
+        "verification-and-release"
+      ],
+      "primary_decision": "Builder owns auth implementation/device checks; release skill owns integrated gate and rollout evidence.",
+      "anti_route": "Passing unit tests alone must not produce READY."
+    },
+    {
+      "id": "overlap-15",
+      "prompt": "Investigate stale ownership data in the repository map.",
+      "expected_sequence": [
+        "debugging-investigator",
+        "repository-intelligence"
+      ],
+      "primary_decision": "If a mapping tool/process is malfunctioning, diagnose it; then regenerate the architecture evidence.",
+      "anti_route": "Do not treat an untrusted map as current evidence."
+    },
+    {
+      "id": "overlap-16",
+      "prompt": "Plan a native iOS/Android architecture after Flutter and Expo are disqualified by prototype evidence.",
+      "expected_sequence": [
+        "mobile-architecture-director"
+      ],
+      "primary_decision": "The director records the native decision and boundaries; no Flutter/Expo builder activates.",
+      "anti_route": "Do not force one of the two named cross-platform builders."
+    },
+    {
+      "id": "overlap-17",
+      "prompt": "A dependency advisory affects the web app. Determine blast radius, execute the upgrade, and gate release.",
+      "expected_sequence": [
+        "repository-intelligence",
+        "codebase-evolution-controller",
+        "production-web-builder",
+        "verification-and-release"
+      ],
+      "primary_decision": "Impact evidence, controlled transition, platform-level checks, then release gate.",
+      "anti_route": "Do not convert the advisory into an unsourced package replacement."
+    },
+    {
+      "id": "overlap-18",
+      "prompt": "Update screenshots in the help center after the approved UI implementation.",
+      "expected_sequence": [
+        "documentation-synchronizer"
+      ],
+      "primary_decision": "The UI behavior/direction is settled; this is documentation drift.",
+      "anti_route": "Do not invoke screenshot-to-interface merely because screenshots are inputs."
+    }
+  ]
+}

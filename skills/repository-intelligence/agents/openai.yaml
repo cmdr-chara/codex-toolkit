@@ -1,0 +1,4 @@
+interface:
+  display_name: "Repository Intelligence"
+  short_description: "Map repository architecture and change impact"
+  default_prompt: "Use $repository-intelligence to map this repository's boundaries, ownership, risks, and change impact with evidence."

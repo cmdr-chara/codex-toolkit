@@ -1,0 +1,634 @@
+{
+  "schema_version": 1,
+  "information_checked": "2026-07-17",
+  "minimums": {
+    "positive_per_skill": 4,
+    "negative_per_skill": 3
+  },
+  "skills": [
+    {
+      "skill": "repository-intelligence",
+      "positive": [
+        {
+          "id": "repository-intelligence-p1",
+          "prompt": "Map this monorepo\u2019s deployables, package boundaries, CODEOWNERS evidence, high-churn files, and which consumers a change to packages/auth/src/tokens.ts can affect.",
+          "expected": "activate",
+          "reason": "Requests architecture, ownership, hotspots, and change impact."
+        },
+        {
+          "id": "repository-intelligence-p2",
+          "prompt": "Before we touch the billing API, identify its data stores, inbound and outbound contracts, generated clients, operational dependencies, and likely blast radius.",
+          "expected": "activate",
+          "reason": "Asks for evidence-backed component and dependency mapping."
+        },
+        {
+          "id": "repository-intelligence-p3",
+          "prompt": "Compare the feature branch with main and show where two planned tasks are likely to collide, including schemas, lockfiles, generated code, and shared configuration.",
+          "expected": "activate",
+          "reason": "Requests edit-conflict and impact analysis, not delegation."
+        },
+        {
+          "id": "repository-intelligence-p4",
+          "prompt": "Create a repository intelligence report for this unfamiliar codebase: boundaries, ownership confidence, critical paths, risk hotspots, and unknowns with file evidence.",
+          "expected": "activate",
+          "reason": "Requests the skill\u2019s full analysis output."
+        }
+      ],
+      "negative": [
+        {
+          "id": "repository-intelligence-n1",
+          "prompt": "Split these already-mapped changes between four subagents and assign exclusive write scopes.",
+          "expected": "do_not_activate",
+          "route_to": "multi-agent-work-coordinator",
+          "reason": "Delegation and write ownership are the requested decision."
+        },
+        {
+          "id": "repository-intelligence-n2",
+          "prompt": "Why does checkout intermittently return stale totals after a retry? Reproduce it and find the root cause.",
+          "expected": "do_not_activate",
+          "route_to": "debugging-investigator",
+          "reason": "A concrete symptom with unknown cause requires investigation."
+        },
+        {
+          "id": "repository-intelligence-n3",
+          "prompt": "Upgrade Next.js across the workspace and design the compatibility rollout.",
+          "expected": "do_not_activate",
+          "route_to": "codebase-evolution-controller",
+          "reason": "A known version transition is the primary workflow; repository mapping may be an input only."
+        }
+      ]
+    },
+    {
+      "skill": "multi-agent-work-coordinator",
+      "positive": [
+        {
+          "id": "multi-agent-work-coordinator-p1",
+          "prompt": "Using this repository map and acceptance criteria, split the migration into safe parallel missions with exclusive write ownership and an integration order.",
+          "expected": "activate",
+          "reason": "Requests decomposition, ownership, waves, and integration."
+        },
+        {
+          "id": "multi-agent-work-coordinator-p2",
+          "prompt": "Coordinate three agents across backend, web, and docs; detect overlapping files and make shared schemas single-owner surfaces.",
+          "expected": "activate",
+          "reason": "Requests parallel coordination and collision prevention."
+        },
+        {
+          "id": "multi-agent-work-coordinator-p3",
+          "prompt": "Review these proposed subagent mission cards, reject unsafe overlaps, and define the evidence required before accepting each handoff.",
+          "expected": "activate",
+          "reason": "Requests mission acceptance and ownership validation."
+        },
+        {
+          "id": "multi-agent-work-coordinator-p4",
+          "prompt": "Turn this bounded backlog into a work DAG, mark blocked tasks, assign read/write scopes, and state when the parent must integrate or stop.",
+          "expected": "activate",
+          "reason": "Requests the coordinator output directly."
+        }
+      ],
+      "negative": [
+        {
+          "id": "multi-agent-work-coordinator-n1",
+          "prompt": "Explore this unknown monorepo and tell me how it is architected.",
+          "expected": "do_not_activate",
+          "route_to": "repository-intelligence",
+          "reason": "Repository discovery precedes orchestration."
+        },
+        {
+          "id": "multi-agent-work-coordinator-n2",
+          "prompt": "Choose which GPT model should handle each mission using the toolkit\u2019s six Mission Control roles.",
+          "expected": "do_not_activate",
+          "route_to": "delegate-with-mission-cards",
+          "reason": "Role/model dispatch belongs to the existing adapter, not this generic coordinator."
+        },
+        {
+          "id": "multi-agent-work-coordinator-n3",
+          "prompt": "Implement the payment endpoint and tests yourself.",
+          "expected": "do_not_activate",
+          "route_to": "production-web-builder",
+          "reason": "The request is implementation, not coordination; exact implementing skill depends on repository/platform."
+        }
+      ]
+    },
+    {
+      "skill": "codebase-evolution-controller",
+      "positive": [
+        {
+          "id": "codebase-evolution-controller-p1",
+          "prompt": "Upgrade this service from PostgreSQL 15 to 17 with extension compatibility evidence, rehearsal, rollback, and staged production rollout.",
+          "expected": "activate",
+          "reason": "A database/runtime upgrade with compatibility and rollback."
+        },
+        {
+          "id": "codebase-evolution-controller-p2",
+          "prompt": "Migrate the public REST v1 payload to v2 without breaking mobile clients; design adapters, telemetry, deprecation, and removal criteria.",
+          "expected": "activate",
+          "reason": "An API contract transition with consumers and compatibility window."
+        },
+        {
+          "id": "codebase-evolution-controller-p3",
+          "prompt": "Move the monorepo from Next.js 15 to a supported Next.js 16 line, verify peers and codemods, and keep rollback viable.",
+          "expected": "activate",
+          "reason": "A framework migration rather than ordinary feature work."
+        },
+        {
+          "id": "codebase-evolution-controller-p4",
+          "prompt": "Change event storage from legacy JSON to versioned Protobuf using dual-read/dual-write and a backfill plan.",
+          "expected": "activate",
+          "reason": "A schema/serialization transition requiring staged evolution."
+        }
+      ],
+      "negative": [
+        {
+          "id": "codebase-evolution-controller-n1",
+          "prompt": "The new version crashes on startup, but we do not know why. Find the cause.",
+          "expected": "do_not_activate",
+          "route_to": "debugging-investigator",
+          "reason": "Unknown failure diagnosis comes before deciding migration action."
+        },
+        {
+          "id": "codebase-evolution-controller-n2",
+          "prompt": "Add a new optional profile field without changing existing contracts.",
+          "expected": "do_not_activate",
+          "route_to": "production-web-builder",
+          "reason": "Ordinary implementation without a compatibility transition does not trigger evolution control."
+        },
+        {
+          "id": "codebase-evolution-controller-n3",
+          "prompt": "All migration checks passed; can we release to 100% today?",
+          "expected": "do_not_activate",
+          "route_to": "verification-and-release",
+          "reason": "The final integrated release gate belongs to verification-and-release."
+        }
+      ]
+    },
+    {
+      "skill": "verification-and-release",
+      "positive": [
+        {
+          "id": "verification-and-release-p1",
+          "prompt": "Given this integrated release candidate and CI artifacts, decide READY, CONDITIONAL, or BLOCKED and cite every material evidence gap.",
+          "expected": "activate",
+          "reason": "Direct release-readiness decision."
+        },
+        {
+          "id": "verification-and-release-p2",
+          "prompt": "Build a risk-based verification plan for an auth and database migration, including negative paths, operational checks, rollout, and rollback evidence.",
+          "expected": "activate",
+          "reason": "Requests proportionate integrated evidence strategy."
+        },
+        {
+          "id": "verification-and-release-p3",
+          "prompt": "Audit whether the green pipeline actually covers the affected browser, mobile, schema, and rollback paths before we ship.",
+          "expected": "activate",
+          "reason": "Questions evidence sufficiency rather than raw pass status."
+        },
+        {
+          "id": "verification-and-release-p4",
+          "prompt": "Define release gates and post-deploy checks for this feature-flagged checkout change, including abort thresholds and owners.",
+          "expected": "activate",
+          "reason": "Owns gate, rollout evidence, and rollback requirements."
+        }
+      ],
+      "negative": [
+        {
+          "id": "verification-and-release-n1",
+          "prompt": "Write unit tests for the new price formatter while implementing it.",
+          "expected": "do_not_activate",
+          "route_to": "production-web-builder",
+          "reason": "Feature-level implementation verification stays with the implementer."
+        },
+        {
+          "id": "verification-and-release-n2",
+          "prompt": "A production test is failing with a timeout; determine the cause.",
+          "expected": "do_not_activate",
+          "route_to": "debugging-investigator",
+          "reason": "Failure diagnosis is primary."
+        },
+        {
+          "id": "verification-and-release-n3",
+          "prompt": "Update all docs affected by this CLI flag rename.",
+          "expected": "do_not_activate",
+          "route_to": "documentation-synchronizer",
+          "reason": "Documentation consistency is the requested workflow."
+        }
+      ]
+    },
+    {
+      "skill": "debugging-investigator",
+      "positive": [
+        {
+          "id": "debugging-investigator-p1",
+          "prompt": "Investigate why this race only loses messages under concurrent retries; rank hypotheses, instrument safely, and design a regression test.",
+          "expected": "activate",
+          "reason": "Concrete intermittent failure with unknown cause."
+        },
+        {
+          "id": "debugging-investigator-p2",
+          "prompt": "The iOS app freezes after returning from background on one OS version. Reproduce or bound it and trace the causal path.",
+          "expected": "activate",
+          "reason": "Evidence-led mobile failure investigation."
+        },
+        {
+          "id": "debugging-investigator-p3",
+          "prompt": "A previously stable query is now 20x slower. Compare first/last known versions, isolate the change, and recommend the smallest explanatory fix.",
+          "expected": "activate",
+          "reason": "Regression investigation with timeline and minimal fix."
+        },
+        {
+          "id": "debugging-investigator-p4",
+          "prompt": "This flaky test passes after reruns. Determine whether timing, shared state, clock, or network behavior is causal instead of just increasing retries.",
+          "expected": "activate",
+          "reason": "Requests hypothesis ranking and falsification."
+        }
+      ],
+      "negative": [
+        {
+          "id": "debugging-investigator-n1",
+          "prompt": "Upgrade the database driver from v4 to v5 using the vendor migration guide.",
+          "expected": "do_not_activate",
+          "route_to": "codebase-evolution-controller",
+          "reason": "Known version transition rather than unknown diagnosis."
+        },
+        {
+          "id": "debugging-investigator-n2",
+          "prompt": "Map all dependencies of the notifications service before a redesign.",
+          "expected": "do_not_activate",
+          "route_to": "repository-intelligence",
+          "reason": "Preventive architecture analysis without a symptom."
+        },
+        {
+          "id": "debugging-investigator-n3",
+          "prompt": "The root cause is confirmed; implement the already-specified two-line guard.",
+          "expected": "do_not_activate",
+          "route_to": "production-web-builder",
+          "reason": "Investigation is no longer needed unless evidence must be reconstructed."
+        }
+      ]
+    },
+    {
+      "skill": "documentation-synchronizer",
+      "positive": [
+        {
+          "id": "documentation-synchronizer-p1",
+          "prompt": "This diff renamed three CLI flags and changed defaults; find every user, developer, configuration, example, and migration document that must change.",
+          "expected": "activate",
+          "reason": "Direct documentation drift mapping and synchronization."
+        },
+        {
+          "id": "documentation-synchronizer-p2",
+          "prompt": "Synchronize the OpenAPI source, generated reference workflow, SDK examples, changelog, and deprecation note after this API change.",
+          "expected": "activate",
+          "reason": "Cross-surface API documentation consistency."
+        },
+        {
+          "id": "documentation-synchronizer-p3",
+          "prompt": "Audit whether deployment runbooks and incident procedures still match the new queue topology and rollback command.",
+          "expected": "activate",
+          "reason": "Operational documentation drift."
+        },
+        {
+          "id": "documentation-synchronizer-p4",
+          "prompt": "Update screenshots, alt text, navigation labels, and help content after this final UI change, then verify links and examples.",
+          "expected": "activate",
+          "reason": "User docs and visual help synchronization caused by implementation."
+        }
+      ],
+      "negative": [
+        {
+          "id": "documentation-synchronizer-n1",
+          "prompt": "Write a brand manifesto for a new consumer product.",
+          "expected": "do_not_activate",
+          "route_to": "product-design-director",
+          "reason": "Brand/product direction is not code-caused documentation drift."
+        },
+        {
+          "id": "documentation-synchronizer-n2",
+          "prompt": "Decide what the API should return for an invalid request.",
+          "expected": "do_not_activate",
+          "route_to": "production-web-builder",
+          "reason": "Product/implementation behavior must be decided before documentation."
+        },
+        {
+          "id": "documentation-synchronizer-n3",
+          "prompt": "Fix the authentication bug and add tests.",
+          "expected": "do_not_activate",
+          "route_to": "debugging-investigator",
+          "reason": "Diagnosis/implementation is primary; docs may be a later handoff."
+        }
+      ]
+    },
+    {
+      "skill": "product-design-director",
+      "positive": [
+        {
+          "id": "product-design-director-p1",
+          "prompt": "Define a distinctive UX and visual direction for this new B2B planning product, including hierarchy, states, responsive rules, and accessibility intent.",
+          "expected": "activate",
+          "reason": "Greenfield product and visual direction."
+        },
+        {
+          "id": "product-design-director-p2",
+          "prompt": "Audit this existing dashboard\u2019s UX and visual system, preserve what works, and produce a prioritized redesign direction rather than code.",
+          "expected": "activate",
+          "reason": "Audit-first redesign and direction."
+        },
+        {
+          "id": "product-design-director-p3",
+          "prompt": "Extract usable brand principles from these approved assets and translate them into typography, color roles, spacing, motion, and component behavior.",
+          "expected": "activate",
+          "reason": "Brand extraction into a coherent system."
+        },
+        {
+          "id": "product-design-director-p4",
+          "prompt": "Compare two possible experience directions for the onboarding flow and recommend one against user jobs, risk, tone, and platform constraints.",
+          "expected": "activate",
+          "reason": "Taste calibration and UX decision-making."
+        }
+      ],
+      "negative": [
+        {
+          "id": "product-design-director-n1",
+          "prompt": "Recreate this supplied screenshot as responsive React components.",
+          "expected": "do_not_activate",
+          "route_to": "screenshot-to-interface",
+          "reason": "Reference fidelity is the primary requirement."
+        },
+        {
+          "id": "product-design-director-n2",
+          "prompt": "Make the existing Next.js page production-ready, add forms, data loading, tests, and browser verification.",
+          "expected": "do_not_activate",
+          "route_to": "production-web-builder",
+          "reason": "Implementation architecture and production hardening are requested."
+        },
+        {
+          "id": "product-design-director-n3",
+          "prompt": "Resize this logo and export social variants.",
+          "expected": "do_not_activate",
+          "route_to": "product-design-director",
+          "reason": "Asset production alone is outside this repository skill\u2019s direction workflow."
+        }
+      ]
+    },
+    {
+      "skill": "screenshot-to-interface",
+      "positive": [
+        {
+          "id": "screenshot-to-interface-p1",
+          "prompt": "Implement this desktop and mobile screenshot pair in the existing app, infer responsive rules, reuse available assets, and show visual comparison evidence.",
+          "expected": "activate",
+          "reason": "Reference-driven responsive reconstruction."
+        },
+        {
+          "id": "screenshot-to-interface-p2",
+          "prompt": "Analyze why our page differs from the approved Figma export and fix only the structural, typography, and asset mismatches.",
+          "expected": "activate",
+          "reason": "Fidelity audit against supplied evidence."
+        },
+        {
+          "id": "screenshot-to-interface-p3",
+          "prompt": "Turn these four screen captures into a component map and maintainable interface while logging uncertain states and asset rights.",
+          "expected": "activate",
+          "reason": "Structural decomposition and provenance-aware implementation."
+        },
+        {
+          "id": "screenshot-to-interface-p4",
+          "prompt": "Reconstruct this mobile checkout screen from the reference, including keyboard, loading, error, and accessibility behavior inferred from the product contract.",
+          "expected": "activate",
+          "reason": "Reference fidelity plus maintainable state behavior."
+        }
+      ],
+      "negative": [
+        {
+          "id": "screenshot-to-interface-n1",
+          "prompt": "Invent a visual identity for a climate analytics startup with no references.",
+          "expected": "do_not_activate",
+          "route_to": "product-design-director",
+          "reason": "Original direction is primary."
+        },
+        {
+          "id": "screenshot-to-interface-n2",
+          "prompt": "Audit this completed web app for caching, SEO, observability, performance, and security.",
+          "expected": "do_not_activate",
+          "route_to": "production-web-builder",
+          "reason": "General production readiness is not reference reconstruction."
+        },
+        {
+          "id": "screenshot-to-interface-n3",
+          "prompt": "Extract the text from this screenshot into a plain document.",
+          "expected": "do_not_activate",
+          "route_to": "screenshot-to-interface",
+          "reason": "OCR/transcription without interface reconstruction should not trigger the skill."
+        }
+      ]
+    },
+    {
+      "skill": "production-web-builder",
+      "positive": [
+        {
+          "id": "production-web-builder-p1",
+          "prompt": "Build this authenticated Next.js account flow in the existing repository with data boundaries, forms, error states, accessibility, tests, telemetry, and browser verification.",
+          "expected": "activate",
+          "reason": "Full production web implementation."
+        },
+        {
+          "id": "production-web-builder-p2",
+          "prompt": "Audit this React storefront for hydration, caching, forms, responsive behavior, Core Web Vitals, accessibility, SEO, and failure observability.",
+          "expected": "activate",
+          "reason": "Production web audit across owned concerns."
+        },
+        {
+          "id": "production-web-builder-p3",
+          "prompt": "Implement the approved screenshot reconstruction as maintainable web components and finish production hardening across browsers.",
+          "expected": "activate",
+          "reason": "Web builder receives a design/reconstruction handoff and owns production implementation."
+        },
+        {
+          "id": "production-web-builder-p4",
+          "prompt": "Choose conditional web packages for this repository only after inspecting its framework, versions, existing dependencies, and actual behavior needs.",
+          "expected": "activate",
+          "reason": "Repository-grounded package and architecture decisions."
+        }
+      ],
+      "negative": [
+        {
+          "id": "production-web-builder-n1",
+          "prompt": "Choose whether the mobile product should use Flutter or Expo.",
+          "expected": "do_not_activate",
+          "route_to": "mobile-architecture-director",
+          "reason": "Mobile platform selection is a separate architectural decision."
+        },
+        {
+          "id": "production-web-builder-n2",
+          "prompt": "Give us a new visual direction but do not write code.",
+          "expected": "do_not_activate",
+          "route_to": "product-design-director",
+          "reason": "Art direction rather than web implementation."
+        },
+        {
+          "id": "production-web-builder-n3",
+          "prompt": "Can this final release candidate ship after all teams integrated their changes?",
+          "expected": "do_not_activate",
+          "route_to": "verification-and-release",
+          "reason": "Integrated release gate belongs to verification-and-release."
+        }
+      ]
+    },
+    {
+      "skill": "mobile-architecture-director",
+      "positive": [
+        {
+          "id": "mobile-architecture-director-p1",
+          "prompt": "Choose between Flutter, Expo/React Native, and native iOS/Android for this offline field app using product, team, device API, security, and distribution constraints.",
+          "expected": "activate",
+          "reason": "Explicit cross-platform selection."
+        },
+        {
+          "id": "mobile-architecture-director-p2",
+          "prompt": "Produce an evidence-weighted ADR for a high-performance camera app and identify which claims require prototypes before platform commitment.",
+          "expected": "activate",
+          "reason": "Platform choice under native/performance uncertainty."
+        },
+        {
+          "id": "mobile-architecture-director-p3",
+          "prompt": "Decide whether to share UI, share only domain logic, or build native apps for a regulated banking product with separate platform roadmaps.",
+          "expected": "activate",
+          "reason": "Architecture/platform decision beyond a framework popularity contest."
+        },
+        {
+          "id": "mobile-architecture-director-p4",
+          "prompt": "Reassess our Expo choice after a required vendor SDK and background-execution constraint appeared; state whether the decision is invalidated.",
+          "expected": "activate",
+          "reason": "New evidence may reopen the platform decision."
+        }
+      ],
+      "negative": [
+        {
+          "id": "mobile-architecture-director-n1",
+          "prompt": "Flutter is already mandated; implement routing, persistence, tests, and release builds.",
+          "expected": "do_not_activate",
+          "route_to": "flutter-production-builder",
+          "reason": "Selection is settled; execute platform-specific work."
+        },
+        {
+          "id": "mobile-architecture-director-n2",
+          "prompt": "Upgrade this Expo project from SDK 56 to 57.",
+          "expected": "do_not_activate",
+          "route_to": "codebase-evolution-controller",
+          "reason": "A concrete SDK migration is evolution control with Expo builder support."
+        },
+        {
+          "id": "mobile-architecture-director-n3",
+          "prompt": "Design the visual language for the mobile product.",
+          "expected": "do_not_activate",
+          "route_to": "product-design-director",
+          "reason": "Product design direction, not platform selection."
+        }
+      ]
+    },
+    {
+      "skill": "flutter-production-builder",
+      "positive": [
+        {
+          "id": "flutter-production-builder-p1",
+          "prompt": "Implement this approved product flow in the existing Flutter app with routing, state ownership, networking, offline storage, adaptive UI, tests, and release evidence.",
+          "expected": "activate",
+          "reason": "Deep Flutter implementation."
+        },
+        {
+          "id": "flutter-production-builder-p2",
+          "prompt": "Audit our Flutter architecture for state, navigation, serialization, migrations, secure storage, platform channels, accessibility, and performance.",
+          "expected": "activate",
+          "reason": "Flutter-specific production audit."
+        },
+        {
+          "id": "flutter-production-builder-p3",
+          "prompt": "Add an offline-first work-order queue to this Flutter app with an explicit source of truth, outbox, conflict policy, and migration tests.",
+          "expected": "activate",
+          "reason": "Flutter offline/data workflow."
+        },
+        {
+          "id": "flutter-production-builder-p4",
+          "prompt": "Prepare this Flutter app for iOS and Android release, including flavors, signing inputs, permissions, semantics, profile-mode performance, and store checks.",
+          "expected": "activate",
+          "reason": "Flutter build/release preparation."
+        }
+      ],
+      "negative": [
+        {
+          "id": "flutter-production-builder-n1",
+          "prompt": "Should we build this product in Flutter or React Native?",
+          "expected": "do_not_activate",
+          "route_to": "mobile-architecture-director",
+          "reason": "Platform selection is unresolved."
+        },
+        {
+          "id": "flutter-production-builder-n2",
+          "prompt": "Fix a generic Dart parser package with no application or platform concerns.",
+          "expected": "do_not_activate",
+          "route_to": "flutter-production-builder",
+          "reason": "Ordinary Dart library work is outside the mobile app workflow."
+        },
+        {
+          "id": "flutter-production-builder-n3",
+          "prompt": "The Flutter app crashes only on resume and the cause is unknown.",
+          "expected": "do_not_activate",
+          "route_to": "debugging-investigator",
+          "reason": "Diagnose first; Flutter builder may implement the confirmed fix."
+        }
+      ]
+    },
+    {
+      "skill": "expo-react-native-builder",
+      "positive": [
+        {
+          "id": "expo-react-native-builder-p1",
+          "prompt": "Build this feature in the existing Expo Router app with native modules, server-state choices, persistence, accessibility, tests, EAS Build, and store evidence.",
+          "expected": "activate",
+          "reason": "Deep Expo/RN implementation."
+        },
+        {
+          "id": "expo-react-native-builder-p2",
+          "prompt": "Audit our Expo app\u2019s Router structure, config plugins, New Architecture compatibility, offline storage, Reanimated usage, security, and release channels.",
+          "expected": "activate",
+          "reason": "Expo/RN production audit."
+        },
+        {
+          "id": "expo-react-native-builder-p3",
+          "prompt": "Design and implement an EAS Update policy with runtime versions, channels, rollout, observability, and rollback that cannot ship native changes OTA.",
+          "expected": "activate",
+          "reason": "Expo updates and release governance."
+        },
+        {
+          "id": "expo-react-native-builder-p4",
+          "prompt": "Add a native capability through an Expo module only after checking maintained modules, config/plugin implications, device tests, and binary release requirements.",
+          "expected": "activate",
+          "reason": "Expo native-module boundary implementation."
+        }
+      ],
+      "negative": [
+        {
+          "id": "expo-react-native-builder-n1",
+          "prompt": "Choose Expo or Flutter for this new product.",
+          "expected": "do_not_activate",
+          "route_to": "mobile-architecture-director",
+          "reason": "Platform selection is unresolved."
+        },
+        {
+          "id": "expo-react-native-builder-n2",
+          "prompt": "Implement the web-only React marketing site.",
+          "expected": "do_not_activate",
+          "route_to": "production-web-builder",
+          "reason": "Web-only implementation belongs to the web builder."
+        },
+        {
+          "id": "expo-react-native-builder-n3",
+          "prompt": "The SDK upgrade introduced a memory leak; determine the causal package/version first.",
+          "expected": "do_not_activate",
+          "route_to": "debugging-investigator",
+          "reason": "Unknown regression diagnosis precedes migration or implementation action."
+        }
+      ]
+    }
+  ]
+}

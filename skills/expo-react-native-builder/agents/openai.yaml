@@ -1,0 +1,4 @@
+interface:
+  display_name: "Expo React Native Builder"
+  short_description: "Build production Expo and React Native apps"
+  default_prompt: "Use $expo-react-native-builder to implement this approved Expo and React Native feature with native, test, and release verification."

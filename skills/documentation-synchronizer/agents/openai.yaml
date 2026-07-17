@@ -1,0 +1,4 @@
+interface:
+  display_name: "Documentation Synchronizer"
+  short_description: "Synchronize documentation with code changes"
+  default_prompt: "Use $documentation-synchronizer to find documentation drift from this change and update every affected surface consistently."

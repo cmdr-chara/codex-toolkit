@@ -1,0 +1,4 @@
+interface:
+  display_name: "Verification and Release"
+  short_description: "Assess verification and release readiness"
+  default_prompt: "Use $verification-and-release to build a risk-based verification plan and determine release readiness from evidence."

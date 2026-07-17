@@ -1,0 +1,4 @@
+interface:
+  display_name: "Flutter Production Builder"
+  short_description: "Build production-ready Flutter applications"
+  default_prompt: "Use $flutter-production-builder to implement this approved Flutter feature with production architecture, tests, and release checks."

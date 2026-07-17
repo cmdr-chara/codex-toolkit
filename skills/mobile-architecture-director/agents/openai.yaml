@@ -1,0 +1,4 @@
+interface:
+  display_name: "Mobile Architecture Director"
+  short_description: "Select evidence-based mobile architecture"
+  default_prompt: "Use $mobile-architecture-director to compare viable mobile stacks and produce an evidence-based architecture decision."

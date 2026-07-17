@@ -1,0 +1,4 @@
+interface:
+  display_name: "Codebase Evolution Controller"
+  short_description: "Control migrations with rollback evidence"
+  default_prompt: "Use $codebase-evolution-controller to plan and execute this migration with compatibility evidence, staged rollout, and rollback."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Production Web Builder"
+  short_description: "Build production-ready web applications"
+  default_prompt: "Use $production-web-builder to implement this approved web feature with production architecture, accessibility, tests, and browser verification."

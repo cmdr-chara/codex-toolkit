@@ -1,0 +1,4 @@
+interface:
+  display_name: "Debugging Investigator"
+  short_description: "Investigate failures through causal evidence"
+  default_prompt: "Use $debugging-investigator to reproduce this failure, rank hypotheses, trace the cause, and design a regression test."

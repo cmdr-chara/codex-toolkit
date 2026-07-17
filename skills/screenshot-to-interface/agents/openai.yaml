@@ -1,0 +1,4 @@
+interface:
+  display_name: "Screenshot to Interface"
+  short_description: "Rebuild responsive interfaces from screenshots"
+  default_prompt: "Use $screenshot-to-interface to reconstruct this screenshot as a maintainable, responsive, accessible interface with verified fidelity."

@@ -1,7 +1,7 @@
 {
   "name": "codex-toolkit",
-  "version": "0.1.0",
-  "description": "Reusable Codex skills, custom agents, and installation helpers",
+  "version": "0.2.0",
+  "description": "Production-grade Codex skills, custom agents, and verification tooling",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/cmdr-chara/codex-toolkit.git"
@@ -10,7 +10,10 @@
     "codex",
     "agent-skills",
     "subagents",
-    "multi-agent"
+    "multi-agent",
+    "flutter",
+    "react-native",
+    "web-development"
   ],
   "license": "MIT",
   "type": "module",
@@ -20,10 +23,14 @@
   "files": [
     "agents",
     "bin",
+    "docs",
+    "evaluations",
+    "scripts",
     "skills",
     "CHANGELOG.md",
     "LICENSE",
-    "README.md"
+    "README.md",
+    "THIRD_PARTY_NOTICES.md"
   ],
   "engines": {
     "node": ">=18"
