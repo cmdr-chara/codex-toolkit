@@ -33,6 +33,60 @@ You can install only the skill you need. They also work together when a task gro
 
 You do not need to run a whole chain for every task. Use the smallest skill that matches the decision in front of you.
 
+## What each skill does
+
+### `repository-intelligence`
+
+This is the skill to use before changing a repository you do not fully understand. It maps applications, packages, dependencies, ownership clues, generated files, risky hotspots, and the likely reach of a proposed change. Its job is to explain the codebase with file-level evidence; it does not implement the change or assign work to agents.
+
+### `multi-agent-work-coordinator`
+
+This skill takes work that is already understood and turns it into a safe execution plan. It identifies dependencies, gives every writer a separate area of ownership, groups independent tasks into parallel waves, and defines the order in which results should be integrated. It coordinates work, but it does not choose custom models or replace the parent agent's final review.
+
+### `delegate-with-mission-cards`
+
+This is the Mission Control skill. It decides which specialized reader or writer should receive each approved task, gives that agent a precise mission card, and requires evidence before accepting the result. It is useful when parallel work will genuinely save time; it deliberately stays out of small, tightly coupled, or poorly defined tasks.
+
+### `codebase-evolution-controller`
+
+Use this for changes that move a codebase from one known state to another: framework upgrades, dependency migrations, API versions, database schemas, runtimes, or serialization formats. It checks compatibility, plans temporary adapters or dual-running periods, defines rollout and rollback, and states when old paths can finally be removed. It is not a general feature builder or a bug investigator.
+
+### `debugging-investigator`
+
+This skill handles failures whose cause is not yet known. It starts by reproducing or tightly bounding the problem, ranks possible explanations, adds only the instrumentation needed to test them, and traces the evidence until one cause remains. The result should include the smallest sensible fix and a regression test—not a speculative list of things to try.
+
+### `verification-and-release`
+
+This skill asks, “What do we need to prove before this ships?” It builds a test plan around the actual risks, checks whether CI and other evidence cover those risks, and gives a clear `READY`, `CONDITIONAL`, or `BLOCKED` decision. Builders still test their own features; this skill owns the final, integrated release judgment.
+
+### `documentation-synchronizer`
+
+Use this after behavior, configuration, APIs, deployment steps, or user-facing interfaces change. It finds every affected documentation surface—guides, examples, generated references, migration notes, screenshots, runbooks, and changelogs—then keeps them consistent with the code. It does not invent product behavior that the implementation has not defined.
+
+### `product-design-director`
+
+This skill works out what an experience should communicate and how it should feel before implementation begins. It turns product goals, user needs, existing brand material, and platform constraints into flows, hierarchy, states, typography, color roles, spacing, motion, responsive behavior, and accessibility direction. Use it for design decisions, not for literal screenshot copying or routine frontend coding.
+
+### `screenshot-to-interface`
+
+This skill rebuilds an interface from screenshots or other visual references. It studies layout, spacing, typography, assets, component boundaries, and clues about responsive behavior, then guides implementation through repeated visual comparison. The goal is a maintainable and accessible interface that is faithful to the reference—not a brittle pile of hard-coded coordinates.
+
+### `production-web-builder`
+
+This is the main implementation skill for web applications. It works inside the project's existing stack and covers component boundaries, rendering, data loading, forms, mutations, authentication boundaries, responsive behavior, accessibility, performance, tests, observability, SEO, and a final browser pass. It does not begin by installing a fashionable package list; new dependencies must solve a real need in the repository.
+
+### `mobile-architecture-director`
+
+Use this when the mobile technology has not been chosen yet. It compares Flutter, Expo/React Native, native development, Kotlin Multiplatform, web containers, and other realistic options against the product, team, offline, security, device, performance, accessibility, and release requirements. It records disqualifiers and recommends small proof projects when the answer cannot be trusted on paper alone.
+
+### `flutter-production-builder`
+
+This skill takes over once Flutter is already the chosen platform. It covers application structure, state, routing, networking, serialization, local data, offline behavior, platform integration, adaptive UI, accessibility, tests, performance, observability, signing, and release preparation. Package choices are made from the project's needs and existing conventions instead of being prescribed in advance.
+
+### `expo-react-native-builder`
+
+This is the equivalent builder for Expo and React Native projects. It handles routing, development builds, native modules, state and server data, secure and offline storage, background work, animation, gestures, accessibility, device testing, performance, EAS Build, over-the-air update rules, and store release. It treats Expo Go as a useful playground, not as proof that a production binary is ready.
+
 ## Install a skill
 
 See everything available in the repository:
