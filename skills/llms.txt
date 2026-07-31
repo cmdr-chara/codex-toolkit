@@ -11,3 +11,5 @@ production-web-builder: Production web architecture and implementation across da
 mobile-architecture-director: Evidence-based selection among Flutter, Expo/React Native, native, and other mobile approaches.
 flutter-production-builder: Production Flutter architecture and implementation across state, routing, data, offline, platform integration, testing, performance, and release.
 expo-react-native-builder: Production Expo/React Native architecture and implementation across routing, builds, updates, native modules, data, offline, testing, performance, and stores.
+review-and-refactor-code: Evidence-backed change review and behavior-preserving refactoring with a mandatory proposal and approval gate.
+optimize-codebase-performance: Measurement-first performance diagnosis and bounded optimization with comparable benchmarks and approval before edits.

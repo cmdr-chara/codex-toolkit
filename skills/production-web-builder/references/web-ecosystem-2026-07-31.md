@@ -1,15 +1,15 @@
-# Web Ecosystem Reference — 2026-07-17
+# Web Ecosystem Reference — 2026-07-31
 
-**Information checked:** 2026-07-17  
-**Next review:** 2026-07-20 for the scheduled Next.js security release; otherwise 2026-10-15 or earlier after a framework/security change.  
+**Information checked:** 2026-07-31
+**Next review:** 2026-08-20 for the next monthly Next.js security check, or earlier after a framework/security change.
 **Scope:** React/Next.js production interfaces and conditional supporting packages.  
 **Rule:** Recheck registry peer dependencies, lockfile resolution, official releases, advisories, and licenses at execution time. This file is evidence, not a fixed stack.
 
 ## Framework baseline
 
 - React 19.2 is the current documented feature line. React's follow-up RSC advisory states fixed backports at 19.0.4, 19.1.5, and 19.2.4; do not use earlier affected RSC package patches.
-- Next.js 16.2 is stable. Next.js 16.3 was published under the `@preview` tag on 2026-06-25; do not treat preview as stable by default.
-- Next.js announced a scheduled security patch release for 2026-07-20 covering 16.2 and 15.5. Refresh before release after that date.
+- Next.js 16.2 remains the Active LTS line. Next.js 16.3 remains preview-only; do not treat preview as stable by default.
+- The July 2026 security release fixed 4 high- and 5 medium-severity vulnerabilities. Production users should run at least 16.2.11 (Active LTS) or 15.5.21 (Maintenance LTS) and recheck the resolved version before release.
 - Create React App is deprecated for new applications; choose a framework or maintained build tool based on product needs.
 
 ## Conditional package evidence
@@ -18,7 +18,7 @@
 
 | Package/capability | Compatibility and maintenance checked | License | Security/deprecation | Runtime/build cost | Built-in alternative | Choose when | Avoid when | Sources |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Next.js | Stable 16.2; 16.3 preview only. React framework with server/client components and current App Router docs. Active official releases in 2026. | MIT | Recheck scheduled 2026-07-20 security patch; follow React RSC fixed ranges. | Framework server/build/client runtime; client boundaries and adapter behavior affect cost. | React plus a smaller build/router/server stack when framework features are unnecessary. | Routing, rendering, data/cache, deployment integration, and SEO/server needs justify a framework. | Static widget/library, incompatible deployment contract, or team cannot own server/framework semantics. | https://nextjs.org/blog/next-16-2 ; https://nextjs.org/blog/next-16-3-instant-navigations ; https://nextjs.org/blog/next-security-release-program ; https://nextjs.org/docs |
+| Next.js | Active LTS 16.2; 16.3 preview only. React framework with server/client components and current App Router docs. Active official releases in 2026. | MIT | Use at least 16.2.11 or 15.5.21 from the July 2026 security release; follow React RSC fixed ranges. | Framework server/build/client runtime; client boundaries and adapter behavior affect cost. | React plus a smaller build/router/server stack when framework features are unnecessary. | Routing, rendering, data/cache, deployment integration, and SEO/server needs justify a framework. | Static widget/library, incompatible deployment contract, or team cannot own server/framework semantics. | https://nextjs.org/blog/next-16-2 ; https://nextjs.org/blog/next-16-3-instant-navigations ; https://nextjs.org/blog/july-2026-security-release ; https://nextjs.org/support-policy ; https://nextjs.org/docs |
 | React | 19.2 feature line; use security-fixed RSC packages and framework-supported versions. Active official release/security guidance. | MIT | RSC advisories require fixed backports; inspect actual transitive packages. CRA deprecated. | Client hydration/render work depends on architecture; Server Components can reduce client code when used deliberately. | Native HTML/JS for noncomponent/simple pages. | Stateful component UI and ecosystem/framework integration are warranted. | Static content with no component/runtime need or unsupported framework peer range. | https://react.dev/blog/2025/10/01/react-19-2 ; https://react.dev/blog/2025/12/11/denial-of-service-and-source-code-exposure-in-react-server-components ; https://react.dev/blog/2025/02/14/sunsetting-create-react-app |
 | Base UI | Current official React headless-component docs/repository; verify component package peers against repository React version. | MIT | No deprecation found in checked official sources; still review advisories/lockfile. | Per-component client code and behavior; styling remains application-owned. | Native elements and existing design-system primitives. | Accessible complex primitives are needed and Base UI matches the existing system. | Simple native controls or a repository already standardized on another primitive layer. | https://base-ui.com/ ; https://github.com/mui/base-ui |
 | Radix Primitives | Maintained by WorkOS; official docs and repository active. Verify each package peer range and React 19 behavior in the target app. | MIT | No deprecation found in checked official sources; inspect package advisories. | Client behavior per imported primitive; custom styling and portal/focus behavior require integration tests. | Native elements or existing primitives. | Dialog/menu/popover/tabs/combobox-like behavior needs established accessible primitives. | Adding a second primitive system or wrapping simple controls unnecessarily. | https://www.radix-ui.com/primitives ; https://github.com/radix-ui/primitives |

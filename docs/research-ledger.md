@@ -1,6 +1,6 @@
 # Ecosystem Research Ledger
 
-**Information checked:** 2026-07-17  
+**Information checked:** 2026-07-17; Next.js security refresh 2026-07-31
 **Research mode:** current public web, repository tree/raw-file inspection, official documentation, official package registries/repositories, and release/advisory pages.  
 **Refresh policy:** stable workflow principles remain in `SKILL.md`; changing version/package/platform facts remain in dated references and must be rechecked before use.
 
@@ -21,6 +21,7 @@
 | https://raw.githubusercontent.com/cmdr-chara/codex-toolkit/main/README.md | Installation model, catalog, safety statement, existing skill description | `delegate-with-mission-cards` owns role/model dispatch and parent-side verification. | 2026-07-17 |
 | https://raw.githubusercontent.com/cmdr-chara/codex-toolkit/main/skills/delegate-with-mission-cards/SKILL.md | Delegation gate, mission cards, exclusive writer ownership, waves, handoff review | `multi-agent-work-coordinator` must add a generic work DAG/ownership/integration layer, not duplicate the six-role adapter. | 2026-07-17 |
 | https://raw.githubusercontent.com/cmdr-chara/codex-toolkit/main/LICENSE | MIT terms, copyright | Pack root license preserves `Copyright (c) 2026 cmdr-chara`. | 2026-07-17 |
+| https://github.com/Emanuele-web04/skills/tree/main/skills | Four public Markdown prompts covering code review, refactoring, and two overlapping performance workflows; no license file was exposed | Only general workflow ideas informed an independent two-skill design. No source prose or code was copied; the two performance concepts were merged to avoid ambiguous routing. | 2026-07-31 |
 | https://github.com/Leonxlnx/taste-skill | Repository tree, README, design skill variants, local registry | Source separates taste, redesign, image-to-code, brand, and image-generation concerns. Only relevant concepts were selected. | 2026-07-17 |
 | https://github.com/Leonxlnx/taste-skill/blob/main/skills/taste-skill/SKILL.md | Brief inference, direction calibration, anti-template constraints, preflight concepts | Re-expressed as product evidence, design axes, system rules, states, accessibility, and handoffs. | 2026-07-17 |
 | https://github.com/Leonxlnx/taste-skill/blob/main/skills/redesign-skill/SKILL.md | Audit-before-redesign concept | Re-expressed as a bounded redesign audit that preserves validated behavior and distinguishes diagnosis from direction. | 2026-07-17 |
@@ -29,7 +30,7 @@
 
 ### Inspection limitation
 
-A direct `git clone` was attempted in the build runtime but outbound DNS for Git was unavailable. Repository inspection therefore used the current GitHub tree and raw-file endpoints above. This was sufficient for the inspected files, but it is not a substitute for running the final pack inside a fresh checkout; `INTEGRATION_NOTES.md` documents that merge-time check.
+The original 0.2.0 build could not clone the repository in its runtime. The 0.3.0 work was performed and validated in a direct checkout of cmdr-chara/codex-toolkit. The older web inspection remains part of the provenance record; current repository files are authoritative for the 0.3.0 integration.
 
 ## Codex and Agent Skills conventions
 
@@ -44,12 +45,12 @@ A direct `git clone` was attempted in the build runtime but outbound DNS for Git
 
 ## Web platform and production interface research
 
-Detailed package decisions are in `skills/production-web-builder/references/web-ecosystem-2026-07-17.md`.
+Detailed package decisions are in `skills/production-web-builder/references/web-ecosystem-2026-07-31.md`.
 
 | Area | Primary sources checked | Finding retained |
 | --- | --- | --- |
 | React | https://react.dev/blog/2025/10/01/react-19-2 ; https://react.dev/blog/2025/12/11/denial-of-service-and-source-code-exposure-in-react-server-components ; https://react.dev/blog/2025/02/14/sunsetting-create-react-app | React 19.2 is the current documented feature line; use security-fixed RSC package patches; CRA is deprecated for new apps. |
-| Next.js | https://nextjs.org/blog/next-16-2 ; https://nextjs.org/blog/next-16-3-instant-navigations ; https://nextjs.org/blog/next-security-release-program ; https://nextjs.org/docs | 16.2 is stable, 16.3 was preview at check, and a security patch was scheduled for 2026-07-20. Refresh immediately after that date. |
+| Next.js | https://nextjs.org/blog/next-16-2 ; https://nextjs.org/blog/next-16-3-instant-navigations ; https://nextjs.org/blog/july-2026-security-release ; https://nextjs.org/support-policy ; https://nextjs.org/docs | 16.2 is Active LTS and 16.3 remains preview-only. The July release fixed 4 high- and 5 medium-severity vulnerabilities; use at least 16.2.11 or 15.5.21. Refreshed 2026-07-31. |
 | Rendering/data/cache | https://nextjs.org/docs/app/building-your-application/data-fetching ; https://react.dev/reference/rsc/server-components ; https://tanstack.com/query/v5/docs/framework/react/overview | Select server, route, and client data ownership from behavior/latency/offline needs; do not duplicate caches reflexively. |
 | Forms/validation | https://developer.mozilla.org/docs/Learn_web_development/Extensions/Forms ; https://react-hook-form.com/ ; https://zod.dev/ | Prefer native semantics and server boundaries where sufficient; add client form/schema libraries only for material complexity or untrusted boundary parsing. |
 | State | https://react.dev/learn/managing-state ; https://redux-toolkit.js.org/ ; https://zustand.docs.pmnd.rs/ ; https://jotai.org/ | Classify local, URL, form, server, and durable state before choosing a store. |
@@ -108,14 +109,14 @@ Detailed comparison is in `skills/mobile-architecture-director/references/platfo
 
 Named package rows were checked against their official docs/repositories and, where a concrete release was recorded, npm or pub.dev metadata. The dated matrices deliberately state when to choose and avoid each package. They do not convert package popularity into a recommendation.
 
-- Web matrix: `skills/production-web-builder/references/web-ecosystem-2026-07-17.md`
+- Web matrix: `skills/production-web-builder/references/web-ecosystem-2026-07-31.md`
 - Flutter matrix: `skills/flutter-production-builder/references/flutter-ecosystem-2026-07-17.md`
 - Expo/RN matrix: `skills/expo-react-native-builder/references/expo-react-native-ecosystem-2026-07-17.md`
 - Platform matrix: `skills/mobile-architecture-director/references/platform-decision-matrix-2026-07-17.md`
 
 ## Known refresh triggers
 
-- **2026-07-20:** recheck the announced Next.js security patch and replace the scheduled-release note with actual fixed versions/advisories.
+- **2026-08-20:** recheck the next monthly Next.js security release and update fixed versions/advisories if needed.
 - Any framework stable/SDK release, store policy/target API change, critical advisory, package deprecation, ownership transfer, or license change.
 - A target repository resolving versions outside the dated matrices.
 - A builder encountering a native module, deployment adapter, database/sync engine, authentication provider, or observability vendor not already evaluated.

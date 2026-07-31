@@ -1,0 +1,4 @@
+interface:
+  display_name: "Optimize Codebase Performance"
+  short_description: "Measure bottlenecks and propose safe optimizations"
+  default_prompt: "Use $optimize-codebase-performance to measure this critical path, propose bounded optimizations, and wait for approval before editing."

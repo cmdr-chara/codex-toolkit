@@ -1,7 +1,7 @@
 # Adversarial Self-Review
 
 **Review date:** 2026-07-17  
-**Scope:** all twelve `SKILL.md` files, references, helpers, root routing/licensing material, and evaluations.
+**Scope:** all fourteen `SKILL.md` files, references, helpers, root routing/licensing material, and evaluations.
 
 ## Review questions and resolutions
 
@@ -25,6 +25,9 @@
 | Heuristic overclaim | Repository/doc inventory scripts might be treated as semantic truth. | Every helper labels output as signals/review prompts; skill bodies require manual corroboration and confidence. | Resolved |
 | Secret exposure | Environment/config inventory could read secret values. | Helpers report environment filenames/keys only where applicable and explicitly avoid file contents. Skills require redaction and trust-boundary review. | Resolved |
 | Evaluation superficiality | Trigger examples alone would not test full workflows. | Added four positive and three negative cases per skill, ambiguity sequences, one full scenario per skill, package-claim protocol, and structural validator. | Resolved |
+
+| Review and refactor overreach | A broad skill could report style preferences as bugs or rewrite code on a review request. | Added a five-part finding admission contract, separate optional improvements, behavior-parity evidence, and an AWAITING_APPROVAL stop before edits. | Resolved |
+| Performance theater | Static hunches or incomparable timings could be presented as optimization wins. | Require a named critical path, reproducible baseline, falsifiable hypotheses, comparable remeasurement, correctness checks, and retained negative results. | Resolved |
 
 ## Manual review still required after merge
 

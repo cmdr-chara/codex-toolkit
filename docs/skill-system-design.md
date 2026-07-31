@@ -54,3 +54,14 @@ A single section schema, evidence vocabulary, safety baseline, and handoff model
 - The deliverable is a repository-ready additive pack rather than a direct modification of a live clone because direct Git cloning was unavailable in the execution environment. Repository trees, raw files, README files, and licenses were inspected through current web/raw sources; the limitation is recorded in the research ledger.
 - The pack includes an append-only `skills/llms.txt` fragment instead of overwriting the target catalog.
 - External URL availability is not asserted by the offline validator. The source ledger records URLs and the validator checks their presence, scheme, and dated-review metadata; source freshness still requires human or web-enabled review.
+
+## Code-quality skill synthesis
+
+The 0.3.0 review/refactor and performance skills were independently authored after inspecting https://github.com/Emanuele-web04/skills on 2026-07-31. The repository described itself as open source but exposed no license file at inspection time, so no source prose, examples, or code were copied or adapted.
+
+Four overlapping source prompts were reduced to two owned decisions:
+
+- review-and-refactor-code owns findings and behavior-preserving structural change;
+- optimize-codebase-performance owns measured bottleneck analysis and bounded optimization.
+
+Both split read-only diagnosis from implementation with an explicit approval state. This reduces routing overlap and prevents words such as refactor or optimize from silently authorizing edits.

@@ -6,12 +6,12 @@ This suite tests routing, overlap resolution, complete workflows, resource integ
 
 ## Files
 
-- `routing-cases.json`: 48 positive and 36 negative trigger cases—four positive and three negative per skill.
+- `routing-cases.json`: 56 positive and 42 negative trigger cases—four positive and three negative per skill.
 - `overlap-cases.json`: adversarial prompts that require a primary skill or an explicit sequence/handoff rather than accidental multi-skill activation.
 - `workflow-scenarios.md`: one realistic end-to-end scenario per skill with inputs, workflow, artifacts, verification, and stop conditions.
 - `adversarial-review.md`: self-review findings, corrections, and remaining refresh obligations.
 - `package-claim-review.md`: manual protocol for time-sensitive compatibility, maintenance, license, security, cost, and deprecation claims.
-- `post-install-routing-smoke.md`: a compact live-client check for all twelve primary routes and the highest-risk overlaps.
+- `post-install-routing-smoke.md`: a compact live-client check for all fourteen primary routes and the highest-risk overlaps.
 
 ## Structural run
 

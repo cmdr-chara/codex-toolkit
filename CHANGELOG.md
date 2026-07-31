@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.3.0 - 2026-07-31
+
+- Add review-and-refactor-code for evidence-backed findings and behavior-preserving refactors.
+- Add optimize-codebase-performance for measured bottleneck analysis and bounded optimization.
+- Require both skills to stop at a concrete proposal before editing repository files.
+- Add focused references, routing cases, overlap cases, workflow scenarios, and live smoke prompts.
+- Rewrite the README in simpler language with shorter task-based skill selection and installation guidance.
+- Make validator counts derive from the canonical skill list instead of fixed twelve-skill wording.
+- Record the unlicensed public skill collection as conceptual research only; no source prose or code is included.
+- Refresh Next.js security evidence with the July 2026 fixed releases and next review date.
+
 ## 0.2.0 - 2026-07-17
 
 - Add twelve production workflow skills for repository intelligence, coordination, evolution, verification, debugging, documentation, product design, screenshot reconstruction, web development, mobile architecture, Flutter, and Expo/React Native.

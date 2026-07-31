@@ -267,3 +267,45 @@ Each scenario tests the complete operating contract of one skill. A passing run 
 **Verification:** `expo-doctor` and repository checks pass where applicable; development builds—not Expo Go alone—exercise native behavior; OTA candidate matches its native runtime; known SDK regressions are rechecked and measured.
 
 **Stop/escalate:** stop on incompatible native SDK/New Architecture support, ambiguous runtime/update policy, leaked secrets, unowned credentials, or native changes proposed as OTA-only.
+
+## 13. `review-and-refactor-code` - Review and modularize a payment rules engine
+
+**Situation:** A branch changes payment-rule ordering and the team also wants to split one large evaluator. The change must be reviewed before any structural edit.
+
+**Inputs:** repository and cleanly identified diff; intended ordering and error contracts; callers; generated boundaries; existing tests; explicit approval state.
+
+**Expected workflow:**
+
+1. Freeze base/head, working-tree state, intended behavior, scope, and exclusions.
+2. Trace changed rules through callers, data contracts, side effects, tests, and operational consumers.
+3. Admit only findings with an observable failure, tight location, trigger, evidence, correction, priority, and confidence.
+4. Build a behavior-parity ledger and propose small refactor slices with characterization tests and rollback points.
+5. Stop at AWAITING_APPROVAL without editing.
+6. After explicit approval, recheck repository state, execute only approved slices, and verify each invariant.
+
+**Expected artifacts:** prioritized findings; optional improvements kept separate; parity ledger; bounded proposal; approval state; post-approval diff and verification record when authorized.
+
+**Verification:** review locations resolve; speculative and style observations are excluded; the first run changes no files; approved slices preserve inputs, outputs, errors, ordering, side effects, and callers.
+
+**Stop/escalate:** stop on ambiguous approval, missing behavior evidence, generated source confusion, a required compatibility migration, or a newly discovered failure needing causal debugging.
+
+## 14. `optimize-codebase-performance` - Reduce search API tail latency
+
+**Situation:** Search p99 rises under representative concurrent load. The team wants a measured optimization without changing result order, permissions, or pagination.
+
+**Inputs:** critical path; workload and data shape; environment and build; metric and threshold; profiler and telemetry; correctness invariants; compute budget; explicit approval state.
+
+**Expected workflow:**
+
+1. Record the performance contract and capture comparable baseline samples with raw artifacts.
+2. Trace application, database, external-service, memory, and infrastructure evidence relevant to the measured path.
+3. Write falsifiable bottleneck hypotheses and reject those contradicted by profiles, plans, counters, or controlled comparisons.
+4. Rank bounded batches by impact, evidence, risk, reversibility, and measurement cost.
+5. Stop at AWAITING_APPROVAL without editing.
+6. After explicit approval, implement one batch, run correctness checks, repeat the same benchmark, and accept or reject it from evidence.
+
+**Expected artifacts:** baseline record; hypothesis ledger; bounded proposal; approval state; comparable result table; negative experiments; trade-offs and residual bottlenecks.
+
+**Verification:** baseline and candidate use the same workload and material environment; p99 and secondary metrics are reported with units and variance; permissions, ordering, pagination, and errors remain valid.
+
+**Stop/escalate:** stop when no safe representative baseline exists, measurements are non-comparable, approval is ambiguous, the remedy becomes a migration, or production or cost authority is required.

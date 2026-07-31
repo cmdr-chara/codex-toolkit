@@ -81,7 +81,7 @@ Implement the contract, not a collection of screenshots.
 
 Do not start with a package list.
 
-Use [`references/package-selection.md`](references/package-selection.md) and the dated [`references/web-ecosystem-2026-07-17.md`](references/web-ecosystem-2026-07-17.md).
+Use [`references/package-selection.md`](references/package-selection.md) and the dated [`references/web-ecosystem-2026-07-31.md`](references/web-ecosystem-2026-07-31.md).
 
 Decision order:
 

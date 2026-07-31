@@ -1,6 +1,6 @@
 {
   "name": "codex-toolkit",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Production-grade Codex skills, custom agents, and verification tooling",
   "repository": {
     "type": "git",
@@ -13,7 +13,10 @@
     "multi-agent",
     "flutter",
     "react-native",
-    "web-development"
+    "web-development",
+    "code-review",
+    "refactoring",
+    "performance"
   ],
   "license": "MIT",
   "type": "module",

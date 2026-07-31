@@ -1,224 +1,149 @@
 # Codex Toolkit
 
-> A practical set of Codex skills for working on real software projects.
+> Reusable playbooks that help Codex understand, change, and verify real software projects.
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-0ea5e9.svg)](LICENSE)
-[![Skills](https://img.shields.io/badge/Codex_skills-13-7c3aed.svg)](skills)
+[![Skills](https://img.shields.io/badge/Codex_skills-15-7c3aed.svg)](skills)
 [![Custom agents](https://img.shields.io/badge/custom_agents-6-f97316.svg)](agents/mission-control)
 [![Validation](https://img.shields.io/badge/validation-structural_%2B_smoke-10b981.svg)](evaluations/README.md)
 
-Codex is already good at writing code. The harder part is helping it understand a large repository, choose the right approach, keep parallel changes from colliding, and know when the result is actually ready to ship.
+Codex can already write code. These skills help it handle the harder parts: understanding an unfamiliar repository, choosing a safe approach, making focused changes, and proving the result works.
 
-This repository gives Codex repeatable ways to handle those jobs. It includes 13 skills for repository analysis, debugging, migrations, design, web and mobile development, documentation, testing, releases, and multi-agent work.
+Install only the skill you need. When a task grows, the skills can hand work to one another.
 
-You can install only the skill you need. They also work together when a task grows into something larger.
+## Start in three steps
 
-## Find the right skill
+1. List the available skills:
 
-| What are you trying to do? | Start here |
+       npx skills add https://github.com/cmdr-chara/codex-toolkit --list
+
+2. Install one skill globally:
+
+       npx skills add https://github.com/cmdr-chara/codex-toolkit --skill "debugging-investigator" -g
+
+3. Start a new Codex task and ask normally, or name the skill:
+
+       Use $debugging-investigator to find why checkout sometimes shows stale totals.
+
+Replace debugging-investigator with any skill listed below.
+
+## Pick a skill
+
+### Understand and change code
+
+| You want to... | Use |
 | --- | --- |
-| Understand an unfamiliar repository or see what a change might affect | [`repository-intelligence`](skills/repository-intelligence) |
-| Split known work between agents without overlapping edits | [`multi-agent-work-coordinator`](skills/multi-agent-work-coordinator) |
-| Send well-defined tasks to specialized reader and writer agents | [`delegate-with-mission-cards`](skills/delegate-with-mission-cards) |
-| Upgrade a framework, dependency, database schema, API, or runtime | [`codebase-evolution-controller`](skills/codebase-evolution-controller) |
-| Track down a bug when the cause is still unclear | [`debugging-investigator`](skills/debugging-investigator) |
-| Decide what needs testing or whether a change is ready to release | [`verification-and-release`](skills/verification-and-release) |
-| Update guides, API docs, examples, configuration, and runbooks after a change | [`documentation-synchronizer`](skills/documentation-synchronizer) |
-| Work out how a product should look, feel, and behave | [`product-design-director`](skills/product-design-director) |
-| Turn a screenshot or visual reference into a responsive interface | [`screenshot-to-interface`](skills/screenshot-to-interface) |
-| Build or improve a production web application | [`production-web-builder`](skills/production-web-builder) |
-| Choose between Flutter, Expo/React Native, native, or another mobile approach | [`mobile-architecture-director`](skills/mobile-architecture-director) |
-| Build an app after Flutter has already been chosen | [`flutter-production-builder`](skills/flutter-production-builder) |
-| Build an app after Expo or React Native has already been chosen | [`expo-react-native-builder`](skills/expo-react-native-builder) |
+| Understand an unfamiliar repository or see what a change could affect | [repository-intelligence](skills/repository-intelligence) |
+| Review a change or plan a safe refactor | [review-and-refactor-code](skills/review-and-refactor-code) |
+| Find the cause of a bug or regression | [debugging-investigator](skills/debugging-investigator) |
+| Measure a slow path and plan an optimization | [optimize-codebase-performance](skills/optimize-codebase-performance) |
+| Upgrade a dependency, framework, schema, API, or runtime | [codebase-evolution-controller](skills/codebase-evolution-controller) |
+| Update guides, examples, API docs, configuration, or runbooks | [documentation-synchronizer](skills/documentation-synchronizer) |
+| Decide what must be tested or whether a release is ready | [verification-and-release](skills/verification-and-release) |
 
-You do not need to run a whole chain for every task. Use the smallest skill that matches the decision in front of you.
+Review/refactor and performance requests start with inspection and a proposal. They do not edit files until you approve the proposed batch.
 
-## What each skill does
+### Build products and interfaces
 
-### `repository-intelligence`
+| You want to... | Use |
+| --- | --- |
+| Decide how a product should look and behave | [product-design-director](skills/product-design-director) |
+| Rebuild an interface from screenshots | [screenshot-to-interface](skills/screenshot-to-interface) |
+| Build or audit a production web app | [production-web-builder](skills/production-web-builder) |
+| Choose between Flutter, Expo/React Native, native, or another mobile approach | [mobile-architecture-director](skills/mobile-architecture-director) |
+| Build an app after Flutter is chosen | [flutter-production-builder](skills/flutter-production-builder) |
+| Build an app after Expo or React Native is chosen | [expo-react-native-builder](skills/expo-react-native-builder) |
 
-This is the skill to use before changing a repository you do not fully understand. It maps applications, packages, dependencies, ownership clues, generated files, risky hotspots, and the likely reach of a proposed change. Its job is to explain the codebase with file-level evidence; it does not implement the change or assign work to agents.
+### Work with multiple agents
 
-### `multi-agent-work-coordinator`
+| You want to... | Use |
+| --- | --- |
+| Split understood work into safe, non-overlapping tasks | [multi-agent-work-coordinator](skills/multi-agent-work-coordinator) |
+| Send approved tasks to the toolkit's reader and writer agents | [delegate-with-mission-cards](skills/delegate-with-mission-cards) |
 
-This skill takes work that is already understood and turns it into a safe execution plan. It identifies dependencies, gives every writer a separate area of ownership, groups independent tasks into parallel waves, and defines the order in which results should be integrated. It coordinates work, but it does not choose custom models or replace the parent agent's final review.
+Use the smallest skill that owns the decision in front of you. A skill can hand off to another one when the task changes.
 
-### `delegate-with-mission-cards`
+## How skills work together
 
-This is the Mission Control skill. It decides which specialized reader or writer should receive each approved task, gives that agent a precise mission card, and requires evidence before accepting the result. It is useful when parallel work will genuinely save time; it deliberately stays out of small, tightly coupled, or poorly defined tasks.
+A task does not need every skill. Common paths are:
 
-### `codebase-evolution-controller`
+- Unknown repository -> repository-intelligence -> the relevant implementation skill.
+- Bug with an unknown cause -> debugging-investigator -> a focused fix -> verification-and-release.
+- Requested cleanup -> review-and-refactor-code -> your approval -> incremental refactor.
+- Slow critical path -> optimize-codebase-performance -> your approval -> measured optimization.
+- Framework or schema upgrade -> codebase-evolution-controller -> documentation-synchronizer -> verification-and-release.
+- New product direction -> product-design-director -> a web or mobile builder.
 
-Use this for changes that move a codebase from one known state to another: framework upgrades, dependency migrations, API versions, database schemas, runtimes, or serialization formats. It checks compatibility, plans temporary adapters or dual-running periods, defines rollout and rollback, and states when old paths can finally be removed. It is not a general feature builder or a bug investigator.
-
-### `debugging-investigator`
-
-This skill handles failures whose cause is not yet known. It starts by reproducing or tightly bounding the problem, ranks possible explanations, adds only the instrumentation needed to test them, and traces the evidence until one cause remains. The result should include the smallest sensible fix and a regression test—not a speculative list of things to try.
-
-### `verification-and-release`
-
-This skill asks, “What do we need to prove before this ships?” It builds a test plan around the actual risks, checks whether CI and other evidence cover those risks, and gives a clear `READY`, `CONDITIONAL`, or `BLOCKED` decision. Builders still test their own features; this skill owns the final, integrated release judgment.
-
-### `documentation-synchronizer`
-
-Use this after behavior, configuration, APIs, deployment steps, or user-facing interfaces change. It finds every affected documentation surface—guides, examples, generated references, migration notes, screenshots, runbooks, and changelogs—then keeps them consistent with the code. It does not invent product behavior that the implementation has not defined.
-
-### `product-design-director`
-
-This skill works out what an experience should communicate and how it should feel before implementation begins. It turns product goals, user needs, existing brand material, and platform constraints into flows, hierarchy, states, typography, color roles, spacing, motion, responsive behavior, and accessibility direction. Use it for design decisions, not for literal screenshot copying or routine frontend coding.
-
-### `screenshot-to-interface`
-
-This skill rebuilds an interface from screenshots or other visual references. It studies layout, spacing, typography, assets, component boundaries, and clues about responsive behavior, then guides implementation through repeated visual comparison. The goal is a maintainable and accessible interface that is faithful to the reference—not a brittle pile of hard-coded coordinates.
-
-### `production-web-builder`
-
-This is the main implementation skill for web applications. It works inside the project's existing stack and covers component boundaries, rendering, data loading, forms, mutations, authentication boundaries, responsive behavior, accessibility, performance, tests, observability, SEO, and a final browser pass. It does not begin by installing a fashionable package list; new dependencies must solve a real need in the repository.
-
-### `mobile-architecture-director`
-
-Use this when the mobile technology has not been chosen yet. It compares Flutter, Expo/React Native, native development, Kotlin Multiplatform, web containers, and other realistic options against the product, team, offline, security, device, performance, accessibility, and release requirements. It records disqualifiers and recommends small proof projects when the answer cannot be trusted on paper alone.
-
-### `flutter-production-builder`
-
-This skill takes over once Flutter is already the chosen platform. It covers application structure, state, routing, networking, serialization, local data, offline behavior, platform integration, adaptive UI, accessibility, tests, performance, observability, signing, and release preparation. Package choices are made from the project's needs and existing conventions instead of being prescribed in advance.
-
-### `expo-react-native-builder`
-
-This is the equivalent builder for Expo and React Native projects. It handles routing, development builds, native modules, state and server data, secure and offline storage, background work, animation, gestures, accessibility, device testing, performance, EAS Build, over-the-air update rules, and store release. It treats Expo Go as a useful playground, not as proof that a production binary is ready.
-
-## Install a skill
-
-See everything available in the repository:
-
-```shell
-npx skills add https://github.com/cmdr-chara/codex-toolkit --list
-```
-
-Then install the one you want:
-
-```shell
-npx skills add https://github.com/cmdr-chara/codex-toolkit --skill "repository-intelligence" -g
-```
-
-Replace `repository-intelligence` with any name from the table above. Start a fresh Codex task after installing so Codex can load it.
-
-You can ask normally, or name the skill directly:
-
-```text
-Use $repository-intelligence to map this monorepo before we change authentication.
-```
-
-```text
-Use $mobile-architecture-director to help us choose between Flutter and Expo.
-```
-
-```text
-Use $production-web-builder to build this checkout flow and verify it in a browser.
-```
-
-## How the skills work together
-
-Here is one possible path through the toolkit:
-
-```mermaid
-flowchart LR
-    RI["Understand the repository"] --> DECIDE{"What comes next?"}
-    DECIDE -->|"There is a bug"| DEBUG["Find the cause"]
-    DECIDE -->|"Something must be upgraded"| EVOLVE["Plan the migration"]
-    DECIDE -->|"The product needs direction"| DESIGN["Shape the experience"]
-    DECIDE -->|"The mobile stack is undecided"| MOBILE["Choose the platform"]
-    DESIGN --> WEB["Build for the web"]
-    DESIGN --> SHOT["Rebuild from a screenshot"]
-    MOBILE --> FLUTTER["Build with Flutter"]
-    MOBILE --> EXPO["Build with Expo / React Native"]
-    RI --> COORD["Split the work safely"]
-    COORD --> MC["Send missions to agents"]
-    DEBUG --> VERIFY["Test and release"]
-    EVOLVE --> VERIFY
-    WEB --> DOCS["Update the docs"]
-    SHOT --> DOCS
-    FLUTTER --> DOCS
-    EXPO --> DOCS
-    DOCS --> VERIFY
-```
-
-For example, a large modernization might start with `repository-intelligence`, move through `codebase-evolution-controller`, use `multi-agent-work-coordinator` to divide the work, and finish with `verification-and-release`.
-
-A smaller bug fix may only need `debugging-investigator` and the relevant builder.
+The builder verifies its own change. Verification-and-release makes the final decision about the integrated release.
 
 ## Mission Control
 
-Mission Control is the optional multi-agent part of the toolkit. It adds six custom agents and the `delegate-with-mission-cards` skill.
+Mission Control is optional. It installs six custom agents plus delegate-with-mission-cards.
 
-Install it with:
+Install it directly from GitHub:
 
-```shell
-npx --yes github:cmdr-chara/codex-toolkit
-```
+    npx --yes github:cmdr-chara/codex-toolkit
 
-On Windows, you can also clone the repository and run:
+On Windows, a cloned checkout can use:
 
-```powershell
-.\scripts\install-mission-control.ps1
-```
+    .\scripts\install-mission-control.ps1
 
-The installer backs up conflicting Mission Control files under `~/.codex/backups` before replacing them.
+Existing Mission Control files are backed up under ~/.codex/backups before replacement.
 
-| Role | Model | Good fit for |
-| --- | --- | --- |
-| `pathfinder-reader` | GPT-5.6 Luna | Quickly finding files, symbols, and narrow facts |
-| `patcher-writer` | GPT-5.6 Luna | Small, isolated edits that are easy to verify |
-| `investigator-reader` | GPT-5.6 Terra | Debugging, tracing behavior, reviews, and comparisons |
-| `builder-writer` | GPT-5.6 Terra | Features, tests, fixes, documentation, and configuration |
-| `sentinel-reader` | GPT-5.6 Sol | Security, privacy, migrations, and other high-risk analysis |
-| `architect-writer` | GPT-5.6 Sol | Architecture changes and difficult, failure-sensitive work |
+| Agent | Best for |
+| --- | --- |
+| pathfinder-reader | Fast file, symbol, and fact lookup |
+| patcher-writer | Small isolated edits |
+| investigator-reader | Debugging, tracing, and focused reviews |
+| builder-writer | Features, tests, fixes, docs, and configuration |
+| sentinel-reader | Security, privacy, migrations, and other high-risk analysis |
+| architect-writer | Difficult architecture and failure-sensitive changes |
 
-`multi-agent-work-coordinator` decides how the work should be divided. Mission Control chooses the right agent for each approved piece of work. This keeps planning and model selection separate.
+The coordinator decides how work is divided. Mission Control chooses an agent for each approved task. The parent Codex task still owns integration and final verification.
 
-## What is inside a skill?
+## What is inside
 
-These skills are more than short prompt templates. Depending on the job, a skill may include:
+Each skill is an installable folder with:
 
-- clear examples of when it should and should not be used;
-- a step-by-step working process;
-- rules for preserving uncommitted work and avoiding risky changes;
-- checklists for handoffs, failures, and stopping points;
-- current web, Flutter, and Expo package research;
-- small read-only scripts for inspecting a repository;
-- tests for confusing cases where two skills might otherwise compete.
+- SKILL.md for its trigger, workflow, safety rules, and stopping points;
+- agents/openai.yaml for the name and prompt shown in Codex;
+- optional references for detail that should load only when needed;
+- optional read-only scripts for deterministic inspection.
 
-The package guidance is conditional. A skill should inspect the existing project before suggesting a new dependency, and it should prefer built-in tools when they are enough.
+Skills are designed to work independently. No skill depends on a hidden shared runtime folder.
 
 ## Check the toolkit
 
-The repository includes two local checks. One checks the structure, links, metadata, research dates, licenses, and Python scripts. The other runs every helper against temporary sample projects and confirms that none of them changes the input files.
+Run the structural validator:
 
-```shell
-python scripts/validate_skill_pack.py . --as-of 2026-07-17
-python scripts/run_smoke_tests.py . --as-of 2026-07-17
-```
+    python scripts/validate_skill_pack.py . --as-of 2026-07-31
 
-After installing the skills, [`evaluations/post-install-routing-smoke.md`](evaluations/post-install-routing-smoke.md) provides a short live routing test. The full test notes are in [`evaluations/README.md`](evaluations/README.md).
+Run the network-free helper smoke tests:
+
+    python scripts/run_smoke_tests.py . --as-of 2026-07-31
+
+The structural check covers skill metadata, links, routing cases, references, licensing, and Python safety rules. The smoke suite runs every helper against temporary sample projects and confirms that fixture inputs do not change.
+
+See [the evaluation guide](evaluations/README.md) for routing and workflow tests.
 
 ## Repository layout
 
-```text
-agents/       The six optional Mission Control agents
-docs/         Design notes, skill boundaries, and research sources
-evaluations/  Routing cases and realistic workflow checks
-scripts/      Installers, validators, and read-only test helpers
-skills/       The 13 installable Codex skills
-```
-
-You can also browse the compact skill catalog in [`skills/llms.txt`](skills/llms.txt) and see release history in [`CHANGELOG.md`](CHANGELOG.md).
+| Folder | Contents |
+| --- | --- |
+| agents | Six optional Mission Control agents |
+| docs | Design decisions, boundaries, and research sources |
+| evaluations | Routing, overlap, workflow, and smoke-test cases |
+| scripts | Installers and validation tools |
+| skills | Fifteen installable skills |
 
 ## Research and credit
 
-The web and mobile package research was last checked on **2026-07-17**. Those references include review dates because frameworks and package recommendations change. Always compare them with the versions in the project you are working on.
+Web research was refreshed on 2026-07-31; mobile research was checked on 2026-07-17. Always compare it with the versions and lockfiles in the project you are changing.
 
-`product-design-director` and `screenshot-to-interface` build on ideas from Leonxlnx's MIT-licensed Taste Skill project. [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) contains the original license, source mapping, and a summary of the changes made here.
+Product design and screenshot reconstruction include adaptations from Leonxlnx's MIT-licensed Taste Skill project. [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) contains the license and source mapping.
+
+The code-review, refactoring, and performance skills were independently authored after inspecting an unlicensed public skill collection. No source prose or code was copied. The research record is in [docs/research-ledger.md](docs/research-ledger.md).
 
 ## License
 
-[MIT](LICENSE) © 2026 cmdr-chara
+[MIT](LICENSE) Copyright 2026 cmdr-chara

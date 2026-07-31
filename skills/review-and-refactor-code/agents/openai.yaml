@@ -1,0 +1,4 @@
+interface:
+  display_name: "Review and Refactor Code"
+  short_description: "Review risks and plan behavior-safe refactors"
+  default_prompt: "Use $review-and-refactor-code to review this change, propose a safe refactor, and wait for approval before editing."

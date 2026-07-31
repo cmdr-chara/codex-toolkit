@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "information_checked": "2026-07-17",
+  "information_checked": "2026-07-31",
   "cases": [
     {
       "id": "overlap-01",
@@ -183,6 +183,65 @@
       ],
       "primary_decision": "The UI behavior/direction is settled; this is documentation drift.",
       "anti_route": "Do not invoke screenshot-to-interface merely because screenshots are inputs."
+    },
+    {
+      "id": "overlap-19",
+      "prompt": "Map an unfamiliar billing service, then review the proposed tax diff for actionable defects.",
+      "expected_sequence": [
+        "repository-intelligence",
+        "review-and-refactor-code"
+      ],
+      "primary_decision": "Map unknown boundaries before reviewing the defined change.",
+      "anti_route": "The reviewer must not invent architecture evidence or turn mapping observations into unsupported findings."
+    },
+    {
+      "id": "overlap-20",
+      "prompt": "A recent refactor introduced an intermittent deadlock. Find the cause, then propose the smallest behavior-safe structural correction.",
+      "expected_sequence": [
+        "debugging-investigator",
+        "review-and-refactor-code"
+      ],
+      "primary_decision": "Diagnose the observed failure before planning structural work.",
+      "anti_route": "Do not call a broad refactor the root cause without reproduction and causal evidence."
+    },
+    {
+      "id": "overlap-21",
+      "prompt": "Clean up the v1 and v2 API adapters while clients still depend on both versions.",
+      "expected_sequence": [
+        "codebase-evolution-controller",
+        "review-and-refactor-code"
+      ],
+      "primary_decision": "Evolution owns compatibility and removal timing; refactoring may simplify approved internals.",
+      "anti_route": "Do not remove or reshape compatibility behavior as ordinary cleanup."
+    },
+    {
+      "id": "overlap-22",
+      "prompt": "The API is slow and sometimes returns wrong totals. Determine the correctness cause before proposing any speed change.",
+      "expected_sequence": [
+        "debugging-investigator",
+        "optimize-codebase-performance"
+      ],
+      "primary_decision": "Correctness diagnosis precedes performance optimization.",
+      "anti_route": "Do not optimize a path whose wrong behavior makes the workload or baseline untrustworthy."
+    },
+    {
+      "id": "overlap-23",
+      "prompt": "Measure the checkout p99, propose a bounded optimization, wait for approval, then provide evidence for release review.",
+      "expected_sequence": [
+        "optimize-codebase-performance",
+        "verification-and-release"
+      ],
+      "primary_decision": "Performance owns measurement and approved batches; release owns the integrated gate.",
+      "anti_route": "A faster local benchmark cannot self-approve the release."
+    },
+    {
+      "id": "overlap-24",
+      "prompt": "Audit the whole Flutter app for release, including accessibility, security, store setup, and one slow animation.",
+      "expected_sequence": [
+        "flutter-production-builder"
+      ],
+      "primary_decision": "The request is a platform-wide production audit.",
+      "anti_route": "Do not make the performance skill co-primary for one concern inside a broader Flutter audit."
     }
   ]
 }

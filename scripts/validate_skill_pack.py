@@ -29,6 +29,8 @@ EXPECTED_SKILLS = [
     "mobile-architecture-director",
     "flutter-production-builder",
     "expo-react-native-builder",
+    "review-and-refactor-code",
+    "optimize-codebase-performance",
 ]
 
 TOOLKIT_SKILLS = ["delegate-with-mission-cards", *EXPECTED_SKILLS]
@@ -491,7 +493,7 @@ def validate_evaluations(result: Result) -> None:
         entries = data.get("skills", []) if isinstance(data, dict) else []
         by_name = {entry.get("skill"): entry for entry in entries if isinstance(entry, dict)}
         if sorted(by_name) != sorted(EXPECTED_SKILLS):
-            result.error("routing-cases.json: skill set does not exactly match the twelve skills")
+            result.error(f"routing-cases.json: skill set does not exactly match the {len(EXPECTED_SKILLS)} canonical skills")
         for skill in EXPECTED_SKILLS:
             entry = by_name.get(skill, {})
             positives = entry.get("positive", []) if isinstance(entry, dict) else []
@@ -519,8 +521,8 @@ def validate_evaluations(result: Result) -> None:
             result.error(f"{rel(overlap_path, result.root)}: invalid JSON: {exc}")
             data = {}
         cases = data.get("cases", []) if isinstance(data, dict) else []
-        if len(cases) < 12:
-            result.error("overlap-cases.json: need at least twelve cross-skill ambiguity cases")
+        if len(cases) < len(EXPECTED_SKILLS):
+            result.error(f"overlap-cases.json: need at least {len(EXPECTED_SKILLS)} cross-skill ambiguity cases")
         for case in cases:
             if not isinstance(case, dict) or not all(case.get(k) for k in ("id", "prompt", "expected_sequence", "primary_decision", "anti_route")):
                 result.error(f"overlap-cases.json: incomplete overlap case {case!r}")
@@ -532,8 +534,8 @@ def validate_evaluations(result: Result) -> None:
             if not re.search(rf"(?m)^##\s+{index}\.\s+`{re.escape(skill)}`(?:\s|—|-)", text):
                 result.error(f"workflow-scenarios.md: missing numbered scenario for {skill}")
         for term in ("Expected workflow", "Expected artifacts", "Verification", "Stop/escalate"):
-            if text.count(f"**{term}:**") < 12:
-                result.error(f"workflow-scenarios.md: fewer than twelve {term!r} blocks")
+            if text.count(f"**{term}:**") < len(EXPECTED_SKILLS):
+                result.error(f"workflow-scenarios.md: fewer than {len(EXPECTED_SKILLS)} {term!r} blocks")
 
     post_install = result.root / "evaluations/post-install-routing-smoke.md"
     if post_install.is_file():
@@ -541,8 +543,8 @@ def validate_evaluations(result: Result) -> None:
         for skill in EXPECTED_SKILLS:
             if f"`{skill}`" not in text:
                 result.error(f"post-install-routing-smoke.md: missing route for {skill}")
-        if text.count("| R") < 12 or text.count("| O") < 4:
-            result.error("post-install-routing-smoke.md: needs at least 12 primary and 4 overlap cases")
+        if text.count("| R") < len(EXPECTED_SKILLS) or text.count("| O") < 4:
+            result.error(f"post-install-routing-smoke.md: needs at least {len(EXPECTED_SKILLS)} primary and 4 overlap cases")
 
     result.metrics["positive_trigger_cases"] = positive_total
     result.metrics["negative_trigger_cases"] = negative_total

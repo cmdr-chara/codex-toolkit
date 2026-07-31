@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "information_checked": "2026-07-17",
+  "information_checked": "2026-07-31",
   "minimums": {
     "positive_per_skill": 4,
     "negative_per_skill": 3
@@ -11,7 +11,7 @@
       "positive": [
         {
           "id": "repository-intelligence-p1",
-          "prompt": "Map this monorepo\u2019s deployables, package boundaries, CODEOWNERS evidence, high-churn files, and which consumers a change to packages/auth/src/tokens.ts can affect.",
+          "prompt": "Map this monorepo’s deployables, package boundaries, CODEOWNERS evidence, high-churn files, and which consumers a change to packages/auth/src/tokens.ts can affect.",
           "expected": "activate",
           "reason": "Requests architecture, ownership, hotspots, and change impact."
         },
@@ -31,7 +31,7 @@
           "id": "repository-intelligence-p4",
           "prompt": "Create a repository intelligence report for this unfamiliar codebase: boundaries, ownership confidence, critical paths, risk hotspots, and unknowns with file evidence.",
           "expected": "activate",
-          "reason": "Requests the skill\u2019s full analysis output."
+          "reason": "Requests the skill’s full analysis output."
         }
       ],
       "negative": [
@@ -96,7 +96,7 @@
         },
         {
           "id": "multi-agent-work-coordinator-n2",
-          "prompt": "Choose which GPT model should handle each mission using the toolkit\u2019s six Mission Control roles.",
+          "prompt": "Choose which GPT model should handle each mission using the toolkit’s six Mission Control roles.",
           "expected": "do_not_activate",
           "route_to": "delegate-with-mission-cards",
           "reason": "Role/model dispatch belongs to the existing adapter, not this generic coordinator."
@@ -329,7 +329,7 @@
         },
         {
           "id": "product-design-director-p2",
-          "prompt": "Audit this existing dashboard\u2019s UX and visual system, preserve what works, and produce a prioritized redesign direction rather than code.",
+          "prompt": "Audit this existing dashboard’s UX and visual system, preserve what works, and produce a prioritized redesign direction rather than code.",
           "expected": "activate",
           "reason": "Audit-first redesign and direction."
         },
@@ -366,7 +366,7 @@
           "prompt": "Resize this logo and export social variants.",
           "expected": "do_not_activate",
           "route_to": "product-design-director",
-          "reason": "Asset production alone is outside this repository skill\u2019s direction workflow."
+          "reason": "Asset production alone is outside this repository skill’s direction workflow."
         }
       ]
     },
@@ -589,7 +589,7 @@
         },
         {
           "id": "expo-react-native-builder-p2",
-          "prompt": "Audit our Expo app\u2019s Router structure, config plugins, New Architecture compatibility, offline storage, Reanimated usage, security, and release channels.",
+          "prompt": "Audit our Expo app’s Router structure, config plugins, New Architecture compatibility, offline storage, Reanimated usage, security, and release channels.",
           "expected": "activate",
           "reason": "Expo/RN production audit."
         },
@@ -627,6 +627,110 @@
           "expected": "do_not_activate",
           "route_to": "debugging-investigator",
           "reason": "Unknown regression diagnosis precedes migration or implementation action."
+        }
+      ]
+    },
+    {
+      "skill": "review-and-refactor-code",
+      "positive": [
+        {
+          "id": "review-and-refactor-code-p1",
+          "prompt": "Review this branch against main for actionable defects and integration risks. Cite exact locations and do not edit anything.",
+          "expected": "activate",
+          "reason": "Requests an evidence-backed review of a defined change."
+        },
+        {
+          "id": "review-and-refactor-code-p2",
+          "prompt": "Refactor this oversized parser into clear modules, but inspect it first and show me the behavior-parity plan before touching files.",
+          "expected": "activate",
+          "reason": "Requests a behavior-preserving refactor with the mandatory proposal gate."
+        },
+        {
+          "id": "review-and-refactor-code-p3",
+          "prompt": "I approve the exact three-slice refactor proposal from your previous response. Apply only those slices and verify every invariant.",
+          "expected": "activate",
+          "reason": "Explicit approval advances the skill to bounded execution."
+        },
+        {
+          "id": "review-and-refactor-code-p4",
+          "prompt": "Assess whether this duplicated checkout logic is worth consolidating. Separate real defects from optional cleanup and stop with a proposal.",
+          "expected": "activate",
+          "reason": "Requests review plus refactor feasibility without immediate edits."
+        }
+      ],
+      "negative": [
+        {
+          "id": "review-and-refactor-code-n1",
+          "prompt": "Map this unfamiliar monorepo, its owners, services, schemas, and blast radius before we know what to change.",
+          "expected": "do_not_activate",
+          "route_to": "repository-intelligence",
+          "reason": "General repository understanding is the primary decision."
+        },
+        {
+          "id": "review-and-refactor-code-n2",
+          "prompt": "Checkout sometimes returns stale totals after retries. Reproduce the failure and identify its cause.",
+          "expected": "do_not_activate",
+          "route_to": "debugging-investigator",
+          "reason": "A concrete symptom with unknown cause requires causal debugging."
+        },
+        {
+          "id": "review-and-refactor-code-n3",
+          "prompt": "Upgrade the public API from v1 to v2 with compatibility adapters and staged removal.",
+          "expected": "do_not_activate",
+          "route_to": "codebase-evolution-controller",
+          "reason": "A compatibility transition is evolution, not refactoring."
+        }
+      ]
+    },
+    {
+      "skill": "optimize-codebase-performance",
+      "positive": [
+        {
+          "id": "optimize-codebase-performance-p1",
+          "prompt": "Profile CLI startup, establish comparable cold and warm baselines, and explain the measured bottleneck without editing.",
+          "expected": "activate",
+          "reason": "Requests measurement and bottleneck attribution for a named path."
+        },
+        {
+          "id": "optimize-codebase-performance-p2",
+          "prompt": "Optimize API p99 latency under this representative workload, but stop with measured hypotheses and a bounded proposal before changing code.",
+          "expected": "activate",
+          "reason": "Requests performance optimization with the mandatory proposal gate."
+        },
+        {
+          "id": "optimize-codebase-performance-p3",
+          "prompt": "I approve optimization batch one exactly as proposed. Implement it, rerun the same benchmark, and reject it if correctness or tail latency worsens.",
+          "expected": "activate",
+          "reason": "Explicit approval advances one bounded measured batch to execution."
+        },
+        {
+          "id": "optimize-codebase-performance-p4",
+          "prompt": "Find why this screen allocates so much memory and rerenders excessively. Report profiler evidence, falsifiers, and the smallest justified experiments.",
+          "expected": "activate",
+          "reason": "Requests measured memory and rendering diagnosis."
+        }
+      ],
+      "negative": [
+        {
+          "id": "optimize-codebase-performance-n1",
+          "prompt": "The process leaks memory until it crashes, but we do not know the lifecycle or cause. Reproduce and diagnose it.",
+          "expected": "do_not_activate",
+          "route_to": "debugging-investigator",
+          "reason": "An incorrect failure state with unknown cause is debugging first."
+        },
+        {
+          "id": "optimize-codebase-performance-n2",
+          "prompt": "Upgrade the database engine to the next major version because its new planner may be faster.",
+          "expected": "do_not_activate",
+          "route_to": "codebase-evolution-controller",
+          "reason": "A version transition owns compatibility and rollback even when performance motivates it."
+        },
+        {
+          "id": "optimize-codebase-performance-n3",
+          "prompt": "Audit this entire Next.js app for auth, forms, accessibility, SEO, observability, deployment, and performance.",
+          "expected": "do_not_activate",
+          "route_to": "production-web-builder",
+          "reason": "Performance is one part of a broader platform production audit."
         }
       ]
     }
