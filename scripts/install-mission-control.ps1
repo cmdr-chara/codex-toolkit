@@ -1,9 +1,12 @@
+#requires -Version 7.0
+
 [CmdletBinding()]
 param(
-    [string]$CodexHome = (Join-Path $HOME '.codex')
+    [string]$CodexHome = (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::UserProfile)) '.codex')
 )
 
 $ErrorActionPreference = 'Stop'
+Set-StrictMode -Version Latest
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $skillSource = Join-Path $repoRoot 'skills\delegate-with-mission-cards'
 $agentSource = Join-Path $repoRoot 'agents\mission-control'

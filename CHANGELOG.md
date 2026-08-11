@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.0 - 2026-08-11
+
+- Add public CI for structural validation, helper smoke tests, package inspection, and an isolated Mission Control install.
+- Scope the package name to `@cmdr-chara/codex-toolkit` to avoid colliding with an unrelated npm package.
+- Require PowerShell 7 for the repository-owned installer and make its default home-directory lookup profile-independent.
+- Tighten the README around the fastest useful install, trust signals, and the distinction between individual skills and Mission Control.
+- Correct the evaluation guide to reflect all fifteen primary skill routes.
+
 ## 0.3.0 - 2026-07-31
 
 - Add review-and-refactor-code for evidence-backed findings and behavior-preserving refactors.

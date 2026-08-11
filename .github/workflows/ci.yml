@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+
+      - name: Validate skill pack
+        run: python scripts/validate_skill_pack.py . --as-of 2026-08-11
+
+      - name: Run helper smoke tests
+        run: python scripts/run_smoke_tests.py . --as-of 2026-08-11
+
+      - name: Inspect package contents
+        run: npm pack --dry-run
+
+      - name: Test Mission Control installer in isolation
+        shell: bash
+        run: |
+          temp_home="$(mktemp -d)"
+          node bin/install.mjs --codex-home "$temp_home"
+          test -f "$temp_home/skills/delegate-with-mission-cards/SKILL.md"
+          test "$(find "$temp_home/agents" -maxdepth 1 -name '*.toml' | wc -l)" -eq 6

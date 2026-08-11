@@ -1,31 +1,41 @@
 # Codex Toolkit
 
-> Reusable playbooks that help Codex understand, change, and verify real software projects.
+> Fifteen focused Codex skills for understanding, changing, and verifying real software projects.
 
+[![CI](https://github.com/cmdr-chara/codex-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/cmdr-chara/codex-toolkit/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-0ea5e9.svg)](LICENSE)
 [![Skills](https://img.shields.io/badge/Codex_skills-15-7c3aed.svg)](skills)
 [![Custom agents](https://img.shields.io/badge/custom_agents-6-f97316.svg)](agents/mission-control)
-[![Validation](https://img.shields.io/badge/validation-structural_%2B_smoke-10b981.svg)](evaluations/README.md)
 
-Codex can already write code. These skills help it handle the harder parts: understanding an unfamiliar repository, choosing a safe approach, making focused changes, and proving the result works.
+<p align="center">
+  <img src=".github/assets/codex-toolkit-social-preview.png" width="900" alt="Codex Toolkit: Inspect. Change. Prove. Fifteen Codex skills and six optional agents." />
+</p>
 
-Install only the skill you need. When a task grows, the skills can hand work to one another.
+Codex can write code without this toolkit. The skills here are for the parts around the code: tracing an unfamiliar system, controlling scope, checking assumptions, preserving behavior, and deciding what evidence is enough to ship.
 
-## Start in three steps
+Each skill is self-contained. Install one without pulling in a shared runtime, account, or hosted service.
 
-1. List the available skills:
+## Install one useful skill
 
-       npx skills add https://github.com/cmdr-chara/codex-toolkit --list
+List the collection:
 
-2. Install one skill globally:
+```sh
+npx skills add https://github.com/cmdr-chara/codex-toolkit --list
+```
 
-       npx skills add https://github.com/cmdr-chara/codex-toolkit --skill "debugging-investigator" -g
+Install the repository investigator globally:
 
-3. Start a new Codex task and ask normally, or name the skill:
+```sh
+npx skills add https://github.com/cmdr-chara/codex-toolkit --skill "repository-intelligence" -g
+```
 
-       Use $debugging-investigator to find why checkout sometimes shows stale totals.
+Start a fresh Codex task and ask normally, or name it explicitly:
 
-Replace debugging-investigator with any skill listed below.
+```text
+Use $repository-intelligence to map this repository before we change the billing flow.
+```
+
+For a bug investigation instead, replace it with `debugging-investigator`. The table below covers every option.
 
 ## Pick a skill
 
@@ -78,7 +88,7 @@ The builder verifies its own change. Verification-and-release makes the final de
 
 ## Mission Control
 
-Mission Control is optional. It installs six custom agents plus delegate-with-mission-cards.
+Mission Control is optional and separate from the individual skill install above. It adds six custom agents plus `delegate-with-mission-cards` for tasks that are already understood well enough to split safely.
 
 Install it directly from GitHub:
 
@@ -114,15 +124,19 @@ Skills are designed to work independently. No skill depends on a hidden shared r
 
 ## Check the toolkit
 
+The checks run without network access and do not modify their fixture projects.
+
 Run the structural validator:
 
-    python scripts/validate_skill_pack.py . --as-of 2026-07-31
+    python scripts/validate_skill_pack.py . --as-of 2026-08-11
 
 Run the network-free helper smoke tests:
 
-    python scripts/run_smoke_tests.py . --as-of 2026-07-31
+    python scripts/run_smoke_tests.py . --as-of 2026-08-11
 
 The structural check covers skill metadata, links, routing cases, references, licensing, and Python safety rules. The smoke suite runs every helper against temporary sample projects and confirms that fixture inputs do not change.
+
+CI also inspects the npm package contents and installs Mission Control into an isolated temporary Codex home. It never writes to the runner's real Codex configuration.
 
 See [the evaluation guide](evaluations/README.md) for routing and workflow tests.
 
@@ -143,6 +157,10 @@ Web research was refreshed on 2026-07-31; mobile research was checked on 2026-07
 Product design and screenshot reconstruction include adaptations from Leonxlnx's MIT-licensed Taste Skill project. [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) contains the license and source mapping.
 
 The code-review, refactoring, and performance skills were independently authored after inspecting an unlicensed public skill collection. No source prose or code was copied. The research record is in [docs/research-ledger.md](docs/research-ledger.md).
+
+## Contributing
+
+Bug reports, routing examples, and focused skill improvements are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request; it lists the checks and evidence expected for each kind of change.
 
 ## License
 

@@ -1,6 +1,6 @@
 # Evaluation Suite
 
-**Information checked:** 2026-07-17
+**Information checked:** 2026-08-11
 
 This suite tests routing, overlap resolution, complete workflows, resource integrity, volatile package claims, and provenance. It is designed for deterministic structural validation plus model-based execution review.
 
@@ -11,14 +11,14 @@ This suite tests routing, overlap resolution, complete workflows, resource integ
 - `workflow-scenarios.md`: one realistic end-to-end scenario per skill with inputs, workflow, artifacts, verification, and stop conditions.
 - `adversarial-review.md`: self-review findings, corrections, and remaining refresh obligations.
 - `package-claim-review.md`: manual protocol for time-sensitive compatibility, maintenance, license, security, cost, and deprecation claims.
-- `post-install-routing-smoke.md`: a compact live-client check for all fourteen primary routes and the highest-risk overlaps.
+- `post-install-routing-smoke.md`: a compact live-client check for all fifteen primary routes and the highest-risk overlaps.
 
 ## Structural run
 
 From the pack root:
 
 ```sh
-python scripts/validate_skill_pack.py . --as-of 2026-07-17
+python scripts/validate_skill_pack.py . --as-of 2026-08-11
 ```
 
 The validator checks schema/counts, skill/resource existence, local links, frontmatter, line/token proxies, dated references, source URLs, unsafe command strings, Python syntax, provenance, and obvious long-paragraph duplication.
