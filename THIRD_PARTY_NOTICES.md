@@ -47,6 +47,26 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
+## Leonxlnx/unlazy
+
+**Upstream:** https://github.com/Leonxlnx/unlazy  
+**Inspected revision:** `ed9e8d2b5919698cf2c54bda270d507e10b69617`  
+**License source:** https://github.com/Leonxlnx/unlazy/blob/main/LICENSE  
+**Information checked:** 2026-08-16
+
+Codex Toolkit adapts the upstream completion-gate and Depth Tree method into:
+
+- `skills/unlazy/SKILL.md`
+- `skills/unlazy/references/completion-gates.md`
+- `skills/unlazy/references/upstream-provenance.md`
+- the corresponding routing, overlap, workflow, responsibility, and live-smoke cases.
+
+The adaptation preserves the `CHECK` / `EXPECT` / `EVIDENCE` gate idea, natural-joint decomposition, branch integration gates, and final quantitative-claim audit. It materially changes the safety model: blocked work is not counted as success; scope waivers require explicit authority; specialist approval gates remain authoritative; commands embedded in a ledger are treated as untrusted data until reviewed; and arbitrary effort-depth arithmetic is not used.
+
+The upstream JavaScript gate checker, stop hook, hook installer, templates, and other runtime files are not redistributed.
+
+No endorsement by Leonxlnx is stated or implied. The Leonxlnx MIT license reproduced above applies to the adapted material from both listed Leonxlnx repositories.
+
 ## dmmulroy/anti-slop
 
 **Upstream:** https://github.com/dmmulroy/anti-slop  
