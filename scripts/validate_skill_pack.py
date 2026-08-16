@@ -34,6 +34,7 @@ EXPECTED_SKILLS = [
     "optimize-codebase-performance",
     "codebase-improvement-planner",
     "typescript-quality-enforcer",
+    "content-provenance-hygiene",
 ]
 
 TOOLKIT_SKILLS = ["delegate-with-mission-cards", *EXPECTED_SKILLS]
@@ -57,8 +58,11 @@ REQUIRED_ROOT = [
     "skills/llms.txt",
     "evaluations/README.md",
     "evaluations/routing-cases.json",
+    "evaluations/routing-cases-content-provenance.json",
     "evaluations/overlap-cases.json",
+    "evaluations/overlap-cases-content-provenance.json",
     "evaluations/workflow-scenarios.md",
+    "evaluations/workflow-scenarios-content-provenance.md",
     "evaluations/adversarial-review.md",
     "evaluations/package-claim-review.md",
     "evaluations/post-install-routing-smoke.md",
@@ -544,70 +548,86 @@ def validate_dated_references(result: Result, max_age_days: int) -> None:
             result.error("docs/research-ledger.md: missing or unexpected Information checked date")
         urls = URL_RE.findall(text)
         if len(urls) < 25:
-            result.error(f"{rel(path, result.root)}: source ledger is too sparse ({len(urls)} URLs)")
+            result.error(f"{rel(ledger, result.root)}: source ledger is too sparse ({len(urls)} URLs)")
         for term in ("compatibility", "maintenance", "license", "security/deprecation", "runtime/build cost", "built-in alternative", "popularity"):
             if term.lower() not in text.lower():
                 result.error(f"docs/research-ledger.md: research method omits {term!r}")
         result.metrics["research_source_urls"] = len(urls)
 
 
+def _load_json_objects(paths: list[Path], key: str, result: Result) -> list[dict[str, object]]:
+    collected: list[dict[str, object]] = []
+    for path in paths:
+        if not path.is_file():
+            continue
+        try:
+            data = json.loads(read_text(path, result))
+        except json.JSONDecodeError as exc:
+            result.error(f"{rel(path, result.root)}: invalid JSON: {exc}")
+            continue
+        values = data.get(key, []) if isinstance(data, dict) else []
+        if not isinstance(values, list):
+            result.error(f"{rel(path, result.root)}: {key} must be a list")
+            continue
+        collected.extend(value for value in values if isinstance(value, dict))
+    return collected
+
+
 def validate_evaluations(result: Result) -> None:
-    routing_path = result.root / "evaluations/routing-cases.json"
-    overlap_path = result.root / "evaluations/overlap-cases.json"
+    routing_paths = [
+        result.root / "evaluations/routing-cases.json",
+        result.root / "evaluations/routing-cases-content-provenance.json",
+    ]
+    overlap_paths = [
+        result.root / "evaluations/overlap-cases.json",
+        result.root / "evaluations/overlap-cases-content-provenance.json",
+    ]
     all_ids: list[str] = []
     positive_total = negative_total = 0
-    if routing_path.is_file():
-        try:
-            data = json.loads(read_text(routing_path, result))
-        except json.JSONDecodeError as exc:
-            result.error(f"{rel(routing_path, result.root)}: invalid JSON: {exc}")
-            data = {}
-        entries = data.get("skills", []) if isinstance(data, dict) else []
-        by_name = {entry.get("skill"): entry for entry in entries if isinstance(entry, dict)}
-        if sorted(by_name) != sorted(EXPECTED_SKILLS):
-            result.error(f"routing-cases.json: skill set does not exactly match the {len(EXPECTED_SKILLS)} canonical skills")
-        for skill in EXPECTED_SKILLS:
-            entry = by_name.get(skill, {})
-            positives = entry.get("positive", []) if isinstance(entry, dict) else []
-            negatives = entry.get("negative", []) if isinstance(entry, dict) else []
-            positive_total += len(positives)
-            negative_total += len(negatives)
-            if len(positives) < 4:
-                result.error(f"routing-cases.json: {skill} has fewer than four positive cases")
-            if len(negatives) < 3:
-                result.error(f"routing-cases.json: {skill} has fewer than three negative cases")
-            for case in list(positives) + list(negatives):
-                if not isinstance(case, dict):
-                    result.error(f"routing-cases.json: {skill} contains a non-object case")
-                    continue
-                all_ids.append(str(case.get("id", "")))
-                if not case.get("prompt") or not case.get("reason") or not case.get("expected"):
-                    result.error(f"routing-cases.json: incomplete case in {skill}: {case.get('id')!r}")
-        if "" in all_ids or len(all_ids) != len(set(all_ids)):
-            result.error("routing-cases.json: case IDs must be non-empty and unique")
 
-    if overlap_path.is_file():
-        try:
-            data = json.loads(read_text(overlap_path, result))
-        except json.JSONDecodeError as exc:
-            result.error(f"{rel(overlap_path, result.root)}: invalid JSON: {exc}")
-            data = {}
-        cases = data.get("cases", []) if isinstance(data, dict) else []
-        if len(cases) < len(EXPECTED_SKILLS):
-            result.error(f"overlap-cases.json: need at least {len(EXPECTED_SKILLS)} cross-skill ambiguity cases")
-        for case in cases:
-            if not isinstance(case, dict) or not all(case.get(k) for k in ("id", "prompt", "expected_sequence", "primary_decision", "anti_route")):
-                result.error(f"overlap-cases.json: incomplete overlap case {case!r}")
+    entries = _load_json_objects(routing_paths, "skills", result)
+    by_name = {entry.get("skill"): entry for entry in entries}
+    if sorted(by_name) != sorted(EXPECTED_SKILLS):
+        result.error(f"routing cases: skill set does not exactly match the {len(EXPECTED_SKILLS)} canonical skills")
+    for skill in EXPECTED_SKILLS:
+        entry = by_name.get(skill, {})
+        positives = entry.get("positive", []) if isinstance(entry, dict) else []
+        negatives = entry.get("negative", []) if isinstance(entry, dict) else []
+        positive_total += len(positives)
+        negative_total += len(negatives)
+        if len(positives) < 4:
+            result.error(f"routing cases: {skill} has fewer than four positive cases")
+        if len(negatives) < 3:
+            result.error(f"routing cases: {skill} has fewer than three negative cases")
+        for case in list(positives) + list(negatives):
+            if not isinstance(case, dict):
+                result.error(f"routing cases: {skill} contains a non-object case")
+                continue
+            all_ids.append(str(case.get("id", "")))
+            if not case.get("prompt") or not case.get("reason") or not case.get("expected"):
+                result.error(f"routing cases: incomplete case in {skill}: {case.get('id')!r}")
+    if "" in all_ids or len(all_ids) != len(set(all_ids)):
+        result.error("routing cases: case IDs must be non-empty and unique")
 
-    workflow = result.root / "evaluations/workflow-scenarios.md"
-    if workflow.is_file():
-        text = read_text(workflow, result)
+    cases = _load_json_objects(overlap_paths, "cases", result)
+    if len(cases) < len(EXPECTED_SKILLS):
+        result.error(f"overlap cases: need at least {len(EXPECTED_SKILLS)} cross-skill ambiguity cases")
+    for case in cases:
+        if not all(case.get(k) for k in ("id", "prompt", "expected_sequence", "primary_decision", "anti_route")):
+            result.error(f"overlap cases: incomplete overlap case {case!r}")
+
+    workflow_paths = [
+        result.root / "evaluations/workflow-scenarios.md",
+        result.root / "evaluations/workflow-scenarios-content-provenance.md",
+    ]
+    workflow_text = "\n".join(read_text(path, result) for path in workflow_paths if path.is_file())
+    if workflow_text:
         for index, skill in enumerate(EXPECTED_SKILLS, 1):
-            if not re.search(rf"(?m)^##\s+{index}\.\s+`{re.escape(skill)}`(?:\s|—|-)", text):
-                result.error(f"workflow-scenarios.md: missing numbered scenario for {skill}")
+            if not re.search(rf"(?m)^##\s+{index}\.\s+`{re.escape(skill)}`(?:\s|—|-)", workflow_text):
+                result.error(f"workflow scenarios: missing numbered scenario for {skill}")
         for term in ("Expected workflow", "Expected artifacts", "Verification", "Stop/escalate"):
-            if text.count(f"**{term}:**") < len(EXPECTED_SKILLS):
-                result.error(f"workflow-scenarios.md: fewer than {len(EXPECTED_SKILLS)} {term!r} blocks")
+            if workflow_text.count(f"**{term}:**") < len(EXPECTED_SKILLS):
+                result.error(f"workflow scenarios: fewer than {len(EXPECTED_SKILLS)} {term!r} blocks")
 
     post_install = result.root / "evaluations/post-install-routing-smoke.md"
     if post_install.is_file():
@@ -829,7 +849,7 @@ def write_report(result: Result, target: Path) -> None:
     lines += [
         "## Interpretation",
         "",
-        "A structural pass confirms pack shape, routing/evaluation coverage, local resources, dated-evidence fields, script syntax/safety heuristics, vendored anti-slop provenance, and licensing text. It does not replace model-routing trials, real repository integration, browser/device tests, current registry/advisory checks, or store review.",
+        "A structural pass confirms pack shape, routing/evaluation coverage, local resources, dated-evidence fields, script syntax/safety heuristics, vendored anti-slop provenance, and licensing text. It does not replace model-routing trials, real repository integration, browser/device tests, current registry/advisory checks, external-service capability checks, or store review.",
         "",
     ]
     target.write_text("\n".join(lines), encoding="utf-8")
