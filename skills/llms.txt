@@ -4,7 +4,6 @@ multi-agent-work-coordinator: Safe repository work graphs with exclusive write o
 codebase-evolution-controller: Dependency, framework, schema, and API evolution with compatibility stages, rollout, rollback, and evidence.
 verification-and-release: Risk-based test strategy and evidence-backed release readiness decisions.
 debugging-investigator: Reproduction-first debugging with ranked hypotheses, causal tracing, minimal fixes, and regression design.
-bug-finder: Evidence-backed hunting for previously unknown correctness defects using explicit invariants, high-risk surface prioritization, bounded proof/falsification, and clean handoff to causal debugging or the owning specialist.
 documentation-synchronizer: Code-to-documentation drift detection and synchronized user, developer, API, configuration, migration, and operations updates.
 product-design-director: Product UX and visual direction, brand extraction, responsive systems, accessibility, redesign audits, and taste calibration.
 screenshot-to-interface: Maintainable reconstruction from screenshots with structural analysis, asset handling, responsive inference, accessibility, and visual fidelity loops.
@@ -18,3 +17,4 @@ codebase-improvement-planner: Repository-wide improvement discovery that classif
 typescript-quality-enforcer: Evidence-backed TypeScript/JavaScript quality audits, staged anti-slop Oxlint adoption, anti-laundering remediation, and permanent lint/type-safety enforcement.
 content-provenance-hygiene: Evidence-first inspection and authorized sanitation of provenance and metadata surfaces in user-owned text, images, PDFs, and document containers through an optional local service, with approval gates and before/after verification.
 unlazy: Evidence-backed completion discipline for substantial tasks using explicit gates, safe checks, natural-joint decomposition, final-candidate rechecks, and audited completion claims without overriding specialist safety or approval boundaries.
+bug-finder: Evidence-backed hunting for previously unknown correctness defects using explicit invariants, high-risk surface prioritization, bounded proof/falsification, and clean handoff to causal debugging or the owning specialist.
