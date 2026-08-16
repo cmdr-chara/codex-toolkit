@@ -124,6 +124,7 @@ jobs:
           for branch in \
             feat/codebase-improvement-planner \
             feat/typescript-quality-enforcer \
+            feat/content-provenance-hygiene \
             noop-do-not-create
           do
             if git ls-remote --exit-code --heads origin "refs/heads/$branch" >/dev/null 2>&1; then
