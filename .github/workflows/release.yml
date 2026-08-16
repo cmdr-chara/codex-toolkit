@@ -22,6 +22,7 @@ jobs:
     timeout-minutes: 10
     outputs:
       changed: ${{ steps.refresh.outputs.changed }}
+      target_sha: ${{ steps.refresh.outputs.target_sha }}
 
     steps:
       - name: Check out repository
@@ -53,6 +54,7 @@ jobs:
             .github/assets/social-preview-manifest.json
           then
             echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "target_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
@@ -65,18 +67,24 @@ jobs:
           git commit -m "chore: refresh v${version} social preview"
           git push origin HEAD:main
           echo "changed=true" >> "$GITHUB_OUTPUT"
+          echo "target_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
   release:
     needs: preview
-    if: needs.preview.outputs.changed != 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
     steps:
-      - name: Check out repository
+      - name: Check out release candidate
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
+          ref: ${{ needs.preview.outputs.target_sha }}
+
+      - name: Assert candidate identity
+        env:
+          TARGET_SHA: ${{ needs.preview.outputs.target_sha }}
+        run: test "$(git rev-parse HEAD)" = "$TARGET_SHA"
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -153,8 +161,9 @@ jobs:
         if: steps.existing.outputs.tag != 'true'
         env:
           TAG: ${{ steps.release.outputs.tag }}
+          TARGET_SHA: ${{ needs.preview.outputs.target_sha }}
         run: |
-          git tag "$TAG" "$GITHUB_SHA"
+          git tag "$TAG" "$TARGET_SHA"
           git push origin "refs/tags/$TAG"
 
       - name: Create GitHub release
