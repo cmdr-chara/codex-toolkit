@@ -222,6 +222,28 @@ Confidence:
 Next owner:
 ```
 
+## Handoffs
+
+- To `repository-intelligence` when the hunt cannot define reliable component boundaries, ownership, or high-risk consumers from current evidence.
+- To `debugging-investigator` after a concrete failure is confirmed but the causal chain, enabling condition, or minimal explanatory fix remains uncertain.
+- To `review-and-refactor-code` when the user's request narrows to a defined diff/branch review rather than open-ended discovery.
+- To the relevant implementation specialist when a confirmed bug already has a demonstrated bounded remedy and edits are authorized.
+- To `multi-agent-work-coordinator` when several confirmed remediations can be implemented with exclusive write ownership and explicit integration order.
+- To `unlazy` when an accepted remediation becomes a substantial multi-deliverable task whose completion must be audited.
+- To `verification-and-release` only after an integrated candidate exists and final ship/no-ship evidence must be judged.
+
+Do not silently keep primary ownership after the task class changes. Pass the candidate ledger, proof artifact, scope, and remaining unknowns into the next specialist.
+
+## Failure handling
+
+- If the repository is too unfamiliar to derive trustworthy invariants, stop broad hunting and obtain a repository map instead of generating speculative candidates.
+- If a candidate requires unsafe production mutation, retain it as `PLAUSIBLE` and state the safer missing proof rather than forcing reproduction.
+- If a test or harness is flaky, do not rerun until green; either strengthen the proof surface or hand the concrete instability to `debugging-investigator`.
+- If evidence contradicts a candidate, retire it explicitly. Do not weaken the invariant or rewrite the mechanism merely to keep the theory alive.
+- If a supposedly confirmed bug turns out to be intentional product behavior, move it to `RETIRED` unless a real documented contract says otherwise.
+- If the hunt reveals a security/privacy vulnerability, preserve evidence and hand it to the security workflow available in the environment rather than expanding this skill into exploit analysis.
+- If environment/platform evidence is unavailable, report `BOUNDED` with the smallest next discriminating action and name the unexamined high-risk surface.
+
 ## Stop conditions
 
 Stop with `BUGS_FOUND` when at least one defect is `CONFIRMED` and each confirmed finding has an observable proof plus a clear next owner.
