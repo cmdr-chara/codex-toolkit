@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "information_checked": "2026-08-16",
+  "cases": [
+    {
+      "id": "overlap-content-provenance-01",
+      "prompt": "I own this PDF and asked for a metadata-only cleanup. The cleaned copy is now structurally invalid. Preserve the evidence, determine what sanitation actually happened, then find why the service corrupted the file.",
+      "expected_sequence": [
+        "content-provenance-hygiene",
+        "debugging-investigator"
+      ],
+      "primary_decision": "Establish the authorized sanitation result and artifact evidence before causal service debugging.",
+      "anti_route": "Do not keep applying broader cleanup options or treat the corruption as proof that the metadata target was removed."
+    }
+  ]
+}
