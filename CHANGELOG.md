@@ -2,9 +2,12 @@
 
 ## Unreleased
 
+## 0.6.0 - 2026-08-16
+
 - Add `content-provenance-hygiene` for evidence-first inspection and authorized deterministic sanitation of provenance/metadata in user-owned text, images, PDFs, and document containers.
 - Integrate the skill as an optional thin client for the MIT-licensed `guillaumemeyer/watermarks-remover` service without vendoring or silently installing its runtime; keep detector evasion and authorship misrepresentation outside the default workflow.
 - Add routing, workflow, responsibility, and live-smoke coverage for the seventeenth production route and eighteenth installable skill.
+- Refresh release-facing metadata and the social preview for eighteen installable skills.
 
 ## 0.5.0 - 2026-08-16
 
