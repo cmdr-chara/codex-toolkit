@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "information_checked": "2026-08-16",
+  "skills": [
+    {
+      "skill": "content-provenance-hygiene",
+      "positive": [
+        {
+          "id": "content-provenance-hygiene-p1",
+          "prompt": "Inspect this PDF I own for Content Credentials, XMP, document properties, and other provenance metadata. Do not change it; report evidence and what could be removed safely.",
+          "expected": "activate",
+          "reason": "The requested decision is provenance/metadata inspection of an authorized artifact."
+        },
+        {
+          "id": "content-provenance-hygiene-p2",
+          "prompt": "Remove the C2PA and EXIF metadata from my own exported image, keep the visible pixels unchanged, and verify the cleaned copy afterwards.",
+          "expected": "activate",
+          "reason": "Explicitly requests deterministic metadata sanitation plus before/after verification."
+        },
+        {
+          "id": "content-provenance-hygiene-p3",
+          "prompt": "Check this DOCX for invisible Unicode and document metadata, clean only confirmed hygiene issues, preserve the visible text and structure, and keep the original file.",
+          "expected": "activate",
+          "reason": "Combines inspect-first text/container hygiene with a bounded authorized sanitation request."
+        },
+        {
+          "id": "content-provenance-hygiene-p4",
+          "prompt": "Before cleaning this user-owned PDF, query the configured provenance service capabilities and tell me whether the current deployment can inspect and rebuild the container safely.",
+          "expected": "activate",
+          "reason": "Runtime capability sufficiency for provenance sanitation is owned by this skill."
+        }
+      ],
+      "negative": [
+        {
+          "id": "content-provenance-hygiene-n1",
+          "prompt": "Rewrite this AI-generated essay so automated detectors will classify it as human-written.",
+          "expected": "do_not_activate",
+          "route_to": "no-skill",
+          "reason": "Detector evasion and authorship misrepresentation are outside the deterministic metadata-hygiene boundary."
+        },
+        {
+          "id": "content-provenance-hygiene-n2",
+          "prompt": "Retouch this product photo, remove the background, recolor the object, and sharpen it for an ad campaign.",
+          "expected": "do_not_activate",
+          "route_to": "no-skill",
+          "reason": "Ordinary visual editing is not provenance or metadata sanitation."
+        },
+        {
+          "id": "content-provenance-hygiene-n3",
+          "prompt": "The local metadata service now corrupts some PDFs after cleaning. Reproduce the failure, find the cause, and design a regression test.",
+          "expected": "do_not_activate",
+          "route_to": "debugging-investigator",
+          "reason": "A concrete service failure with an unknown cause is a causal debugging task."
+        }
+      ]
+    }
+  ]
+}
