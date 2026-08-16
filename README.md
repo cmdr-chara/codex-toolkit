@@ -1,19 +1,19 @@
 # Codex Toolkit
 
-> Seventeen focused Codex skills for understanding, changing, and verifying real software projects.
+> Eighteen focused Codex skills for understanding, changing, and verifying real software projects.
 
 [![CI](https://github.com/cmdr-chara/codex-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/cmdr-chara/codex-toolkit/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-0ea5e9.svg)](LICENSE)
-[![Skills](https://img.shields.io/badge/Codex_skills-17-7c3aed.svg)](skills)
+[![Skills](https://img.shields.io/badge/Codex_skills-18-7c3aed.svg)](skills)
 [![Custom agents](https://img.shields.io/badge/custom_agents-6-f97316.svg)](agents/mission-control)
 
 <p align="center">
-  <img src=".github/assets/codex-toolkit-social-preview.png" width="900" alt="Codex Toolkit: Inspect. Change. Prove. Seventeen Codex skills and six optional agents." />
+  <img src=".github/assets/codex-toolkit-social-preview.png" width="900" alt="Codex Toolkit: Inspect. Change. Prove. Eighteen Codex skills and six optional agents." />
 </p>
 
 Codex can write code without this toolkit. The skills here are for the parts around the code: tracing an unfamiliar system, controlling scope, checking assumptions, preserving behavior, and deciding what evidence is enough to ship.
 
-Each skill is self-contained. Install one without pulling in a shared runtime, account, or hosted service.
+Each skill is installable independently. Most are self-contained; integrations that use an external service make that dependency explicit rather than relying on a hidden shared runtime.
 
 ## Install one useful skill
 
@@ -46,6 +46,7 @@ For a bug investigation instead, replace it with `debugging-investigator`. The t
 | Understand an unfamiliar repository or see what a change could affect | [repository-intelligence](skills/repository-intelligence) |
 | Discover and rank what the codebase should improve next | [codebase-improvement-planner](skills/codebase-improvement-planner) |
 | Strengthen TypeScript/JavaScript type evidence and deterministic lint enforcement | [typescript-quality-enforcer](skills/typescript-quality-enforcer) |
+| Inspect or sanitize provenance/metadata in user-owned text, images, PDFs, or documents | [content-provenance-hygiene](skills/content-provenance-hygiene) |
 | Review a change or plan a safe refactor | [review-and-refactor-code](skills/review-and-refactor-code) |
 | Find the cause of a bug or regression | [debugging-investigator](skills/debugging-investigator) |
 | Measure a slow path and plan an optimization | [optimize-codebase-performance](skills/optimize-codebase-performance) |
@@ -53,7 +54,7 @@ For a bug investigation instead, replace it with `debugging-investigator`. The t
 | Update guides, examples, API docs, configuration, or runbooks | [documentation-synchronizer](skills/documentation-synchronizer) |
 | Decide what must be tested or whether a release is ready | [verification-and-release](skills/verification-and-release) |
 
-Open-ended codebase improvement, TypeScript quality enforcement, review/refactor, and performance requests start with inspection and a proposal. They do not expand into broad edits until you approve the proposed batch.
+Open-ended codebase improvement, TypeScript quality enforcement, review/refactor, and performance requests start with inspection and a proposal. They do not expand into broad edits until you approve the proposed batch. Content provenance hygiene also inspects first and widens beyond the requested deterministic sanitation scope only with explicit approval.
 
 ### Build products and interfaces
 
@@ -82,6 +83,7 @@ A task does not need every skill. Common paths are:
 - Unknown repository -> repository-intelligence -> the relevant implementation skill.
 - Open-ended “improve this codebase” request -> codebase-improvement-planner -> the specialist that owns the selected upgrade.
 - Repeated TypeScript type-evidence/lint debt -> typescript-quality-enforcer -> staged deterministic enforcement or the specialist that owns an architectural finding.
+- User-owned artifact with provenance/metadata concerns -> content-provenance-hygiene -> inspect -> approved sanitation -> re-inspect.
 - Bug with an unknown cause -> debugging-investigator -> a focused fix -> verification-and-release.
 - Requested cleanup -> review-and-refactor-code -> your approval -> incremental refactor.
 - Slow critical path -> optimize-codebase-performance -> your approval -> measured optimization.
@@ -126,7 +128,7 @@ Each skill is an installable folder with:
 - optional references for detail that should load only when needed;
 - optional read-only scripts for deterministic inspection.
 
-Skills are designed to work independently. No skill depends on a hidden shared runtime folder.
+Skills are designed to install independently. No skill depends on a hidden shared runtime folder; an explicit optional external integration such as the provenance-hygiene service remains operator-controlled and is never silently installed.
 
 ## Check the toolkit
 
@@ -154,7 +156,7 @@ See [the evaluation guide](evaluations/README.md) for routing and workflow tests
 | docs | Design decisions, boundaries, and research sources |
 | evaluations | Routing, overlap, workflow, and smoke-test cases |
 | scripts | Installers and validation tools |
-| skills | Seventeen installable skills |
+| skills | Eighteen installable skills |
 
 ## Research and credit
 
@@ -163,6 +165,8 @@ Codex model routing was refreshed on 2026-08-16; broader web research was refres
 Product design and screenshot reconstruction include adaptations from Leonxlnx's MIT-licensed Taste Skill project. [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) contains the license and source mapping.
 
 The TypeScript quality enforcer vendors the deterministic Oxlint runtime from Dillon Mulroy's MIT-licensed `anti-slop` project at a pinned upstream revision. The surrounding staged-adoption workflow, inventory, routing, and verification are toolkit integration work; attribution and the upstream license are preserved in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+
+Content provenance hygiene was designed after inspecting Guillaume Meyer's MIT-licensed `watermarks-remover` service and skill. Codex Toolkit does not vendor that runtime or copy its cleaning implementation; the optional thin-client protocol reference pins the inspected revision in [skills/content-provenance-hygiene/references/service-protocol.md](skills/content-provenance-hygiene/references/service-protocol.md).
 
 The code-review, refactoring, performance, and codebase-improvement skills were independently authored after inspecting an unlicensed public skill collection. No source prose or code was copied. The research record is in [docs/research-ledger.md](docs/research-ledger.md).
 
