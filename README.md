@@ -90,7 +90,7 @@ The builder verifies its own change. Verification-and-release makes the final de
 
 Mission Control is optional and separate from the individual skill install above. It adds six custom agents plus `delegate-with-mission-cards` for tasks that are already understood well enough to split safely.
 
-The current routing is designed for Codex Subagents V2: Luna Max is the default tier for ordinary reader and writer missions, while Sol Max is reserved for the two extreme-risk roles. OpenAI's public model guide documents Luna, Sol, and `max` reasoning; it does not yet use the public label “Subagents V2.”
+The current routing is designed for Codex Subagents V2: Luna Max is the default tier for ordinary reader and writer missions, Sol High handles high-risk read-only review, and Sol Max is reserved for extreme-risk implementation. OpenAI's public model guide documents Luna, Sol, and these reasoning controls; it does not yet use the public label “Subagents V2.”
 
 Install it directly from GitHub:
 
@@ -108,7 +108,7 @@ Existing Mission Control files are backed up under ~/.codex/backups before repla
 | patcher-writer | Small isolated edits | Luna Max |
 | investigator-reader | Debugging, tracing, and focused reviews | Luna Max |
 | builder-writer | Features, tests, fixes, docs, and configuration | Luna Max |
-| sentinel-reader | Security, privacy, migrations, and other high-risk analysis | Sol Max |
+| sentinel-reader | Security, privacy, migrations, and other high-risk analysis | Sol High |
 | architect-writer | Difficult architecture and failure-sensitive changes | Sol Max |
 
 The coordinator decides how work is divided. Mission Control chooses an agent for each approved task. The parent Codex task still owns integration and final verification.

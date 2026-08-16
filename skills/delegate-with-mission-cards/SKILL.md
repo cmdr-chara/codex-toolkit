@@ -38,7 +38,7 @@ Escalate for ambiguity, blast radius, irreversibility, hidden coupling, or diffi
 
 ## Model tiers
 
-Use Luna Max for the four general roles: `pathfinder-reader`, `patcher-writer`, `investigator-reader`, and `builder-writer`. Reserve Sol Max for `sentinel-reader` and `architect-writer`, where security boundaries, irreversible migrations, architectural risk, or failure-sensitive integration justify the frontier tier. Do not escalate to Sol merely because a mission is long, repetitive, or important.
+Use Luna Max for the four general roles: `pathfinder-reader`, `patcher-writer`, `investigator-reader`, and `builder-writer`. Escalate high-risk read-only review to `sentinel-reader` on Sol High. Reserve Sol Max for `architect-writer`, where irreversible migrations, architectural risk, security hardening, or failure-sensitive integration justify the highest tier. Do not escalate merely because a mission is long, repetitive, or important.
 
 ## Parallelism
 

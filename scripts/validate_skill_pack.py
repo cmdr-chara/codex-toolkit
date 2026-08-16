@@ -41,7 +41,7 @@ MISSION_CONTROL_ROUTES = {
     "patcher-writer": ("gpt-5.6-luna", "max", "workspace-write"),
     "investigator-reader": ("gpt-5.6-luna", "max", "read-only"),
     "builder-writer": ("gpt-5.6-luna", "max", "workspace-write"),
-    "sentinel-reader": ("gpt-5.6-sol", "max", "read-only"),
+    "sentinel-reader": ("gpt-5.6-sol", "high", "read-only"),
     "architect-writer": ("gpt-5.6-sol", "max", "workspace-write"),
 }
 
