@@ -9,7 +9,7 @@
 1. Prefer framework/platform owners, standards bodies, package registries, and upstream repositories.
 2. Treat a release number, peer range, store rule, security status, package license, or maintenance signal as time-sensitive.
 3. Record compatibility, maintenance, adoption fit, license, security/deprecation, runtime/build cost, built-in alternative, and choose/avoid conditions for every named package recommendation.
-4. Do not infer quality from stars or download counts. Adoption is one fit/risk signal only.
+4. Do not infer quality from popularity, stars, or download counts. Adoption is one fit/risk signal only.
 5. Verify the target repository's lockfile and resolved graph at execution time; a ledger cannot establish compatibility for an unseen project.
 6. Do not copy source wording or assets merely because a repository is permissively licensed. Preserve attribution when adaptation is substantial.
 
