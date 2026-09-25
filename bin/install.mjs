@@ -24,6 +24,18 @@ const windowsDailyTask = "Codex Toolkit Auto Update";
 const windowsLogonTask = "Codex Toolkit Auto Update Logon";
 const macLabel = "dev.cmdr-chara.codex-toolkit-update";
 const linuxUnit = "codex-toolkit-update";
+const managedStart = "<!-- codex-toolkit:start -->";
+const managedEnd = "<!-- codex-toolkit:end -->";
+const missionControlAgents = [
+  { file: "pathfinder-reader.toml", name: "pathfinder-reader", sandbox: "read-only" },
+  { file: "patcher-writer.toml", name: "patcher-writer", sandbox: "workspace-write" },
+  { file: "investigator-reader.toml", name: "investigator-reader", sandbox: "read-only" },
+  { file: "builder-writer.toml", name: "builder-writer", sandbox: "workspace-write" },
+  { file: "sentinel-reader.toml", name: "sentinel-reader", sandbox: "read-only" },
+  { file: "architect-writer.toml", name: "architect-writer", sandbox: "workspace-write" },
+];
+const missionControlPinnedField =
+  /^(model|model_reasoning_effort|model_provider|service_tier)\s*=/m;
 
 const argv = process.argv.slice(2);
 const commands = new Set(["setup", "mission-control", "auto-update", "help"]);
@@ -191,26 +203,543 @@ async function installMissionControl({ includeSkill = true } = {}) {
     }
   }
 
-  const agentNames = [
-    "pathfinder-reader.toml",
-    "patcher-writer.toml",
-    "investigator-reader.toml",
-    "builder-writer.toml",
-    "sentinel-reader.toml",
-    "architect-writer.toml",
-  ];
-  for (const name of agentNames) {
+  for (const role of missionControlAgents) {
     if (
       await syncFile(
-        join(packageRoot, "agents", "mission-control", name),
-        join(codexHome, "agents", name),
-        join("agents", name),
+        join(packageRoot, "agents", "mission-control", role.file),
+        join(codexHome, "agents", role.file),
+        join("agents", role.file),
       )
     ) {
       changed += 1;
     }
   }
   return changed;
+}
+
+async function checkMissionControl() {
+  const failures = [];
+  const notes = [];
+  const pass = (label) => console.log(`PASS: ${label}`);
+  const fail = (label) => {
+    failures.push(label);
+    console.log(`FAIL: ${label}`);
+  };
+  const note = (label) => {
+    notes.push(label);
+    console.log(`NOTE: ${label}`);
+  };
+
+  const skillSource = join(packageRoot, "skills", "delegate-with-mission-cards");
+  const skillTarget = join(codexHome, "skills", "delegate-with-mission-cards");
+  if (!(await exists(skillTarget))) {
+    fail("Mission Control skill is not installed");
+  } else if ((await treeDigest(skillSource)) !== (await treeDigest(skillTarget))) {
+    fail("Mission Control skill differs from this toolkit release");
+  } else {
+    pass("Mission Control skill is installed and current");
+  }
+
+  for (const role of missionControlAgents) {
+    const source = join(packageRoot, "agents", "mission-control", role.file);
+    const target = join(codexHome, "agents", role.file);
+    if (!(await exists(target))) {
+      fail(`${role.name} is missing`);
+      continue;
+    }
+    const [sourceBytes, targetBytes] = await Promise.all([readFile(source), readFile(target)]);
+    const text = targetBytes.toString("utf8");
+    if (!sourceBytes.equals(targetBytes)) {
+      fail(`${role.name} differs from this toolkit release`);
+    } else {
+      pass(`${role.name} is current`);
+    }
+    if (!new RegExp(`^name\\s*=\\s*"${role.name}"\\s*#!/usr/bin/env node
+
+import { createHash } from "node:crypto";
+import { spawnSync } from "node:child_process";
+import {
+  chmod,
+  cp,
+  mkdir,
+  readFile,
+  readdir,
+  rename,
+  rm,
+  stat,
+  writeFile,
+} from "node:fs/promises";
+import { homedir } from "node:os";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const packageRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
+const repository = "cmdr-chara/codex-toolkit";
+const stateDirectoryName = "codex-toolkit";
+const windowsDailyTask = "Codex Toolkit Auto Update";
+const windowsLogonTask = "Codex Toolkit Auto Update Logon";
+const macLabel = "dev.cmdr-chara.codex-toolkit-update";
+const linuxUnit = "codex-toolkit-update";
+const managedStart = "<!-- codex-toolkit:start -->";
+const managedEnd = "<!-- codex-toolkit:end -->";
+const missionControlAgents = [
+  { file: "pathfinder-reader.toml", name: "pathfinder-reader", sandbox: "read-only" },
+  { file: "patcher-writer.toml", name: "patcher-writer", sandbox: "workspace-write" },
+  { file: "investigator-reader.toml", name: "investigator-reader", sandbox: "read-only" },
+  { file: "builder-writer.toml", name: "builder-writer", sandbox: "workspace-write" },
+  { file: "sentinel-reader.toml", name: "sentinel-reader", sandbox: "read-only" },
+  { file: "architect-writer.toml", name: "architect-writer", sandbox: "workspace-write" },
+];
+const missionControlPinnedField =
+  /^(model|model_reasoning_effort|model_provider|service_tier)\s*=/m;
+
+const argv = process.argv.slice(2);
+const commands = new Set(["setup", "mission-control", "auto-update", "help"]);
+const command = argv[0] && commands.has(argv[0]) ? argv.shift() : "mission-control";
+
+function option(name) {
+  const index = argv.indexOf(name);
+  return index >= 0 ? argv[index + 1] : undefined;
+}
+
+function flag(name) {
+  return argv.includes(name);
+}
+
+const codexHomeArg = option("--codex-home");
+const codexHome = codexHomeArg || process.env.CODEX_HOME || join(homedir(), ".codex");
+const dryRun = flag("--dry-run");
+const scheduled = flag("--scheduled");
+const noAutoUpdate = flag("--no-auto-update");
+const sourceRelease = option("--source-release");
+
+if (argv.includes("--codex-home") && !codexHomeArg) {
+  throw new Error("--codex-home requires a path");
+}
+if (argv.includes("--source-release") && !sourceRelease) {
+  throw new Error("--source-release requires a tag");
+}
+
+const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+const backupRoot = join(codexHome, "backups", `codex-toolkit-${stamp}`);
+const toolkitStateRoot = join(codexHome, stateDirectoryName);
+
+async function exists(path) {
+  try {
+    await stat(path);
+    return true;
+  } catch (error) {
+    if (error.code === "ENOENT") return false;
+    throw error;
+  }
+}
+
+async function readPackageVersion() {
+  const data = JSON.parse(await readFile(join(packageRoot, "package.json"), "utf8"));
+  if (!data.version || typeof data.version !== "string") {
+    throw new Error("package.json has no version");
+  }
+  return data.version;
+}
+
+async function walkFiles(root, relative = "") {
+  const current = relative ? join(root, relative) : root;
+  const info = await stat(current);
+  if (info.isFile()) return [relative];
+  const entries = await readdir(current, { withFileTypes: true });
+  const files = [];
+  for (const entry of entries.sort((a, b) => a.name.localeCompare(b.name))) {
+    const child = relative ? join(relative, entry.name) : entry.name;
+    if (entry.isDirectory()) {
+      files.push(...(await walkFiles(root, child)));
+    } else if (entry.isFile() || entry.isSymbolicLink()) {
+      files.push(child);
+    }
+  }
+  return files;
+}
+
+async function treeDigest(path) {
+  const hash = createHash("sha256");
+  const files = await walkFiles(path);
+  for (const relative of files) {
+    hash.update(relative.replaceAll("\\", "/"));
+    hash.update("\0");
+    hash.update(await readFile(join(path, relative)));
+    hash.update("\0");
+  }
+  return hash.digest("hex");
+}
+
+async function backup(path, relativeTarget) {
+  if (!(await exists(path))) return false;
+  const destination = join(backupRoot, relativeTarget);
+  if (dryRun) {
+    console.log(`[dry-run] backup ${path} -> ${destination}`);
+    return true;
+  }
+  await mkdir(dirname(destination), { recursive: true });
+  await rename(path, destination);
+  return true;
+}
+
+async function syncDirectory(source, target, relativeTarget) {
+  if (await exists(target)) {
+    const [sourceDigest, targetDigest] = await Promise.all([
+      treeDigest(source),
+      treeDigest(target),
+    ]);
+    if (sourceDigest === targetDigest) return false;
+    await backup(target, relativeTarget);
+  }
+  if (dryRun) {
+    console.log(`[dry-run] install ${source} -> ${target}`);
+    return true;
+  }
+  await mkdir(dirname(target), { recursive: true });
+  await cp(source, target, { recursive: true });
+  return true;
+}
+
+async function syncFile(source, target, relativeTarget) {
+  if (await exists(target)) {
+    const [sourceBytes, targetBytes] = await Promise.all([
+      readFile(source),
+      readFile(target),
+    ]);
+    if (sourceBytes.equals(targetBytes)) return false;
+    await backup(target, relativeTarget);
+  }
+  if (dryRun) {
+    console.log(`[dry-run] install ${source} -> ${target}`);
+    return true;
+  }
+  await mkdir(dirname(target), { recursive: true });
+  await cp(source, target);
+  return true;
+}
+
+async function toolkitSkillNames() {
+  const skillsRoot = join(packageRoot, "skills");
+  const entries = await readdir(skillsRoot, { withFileTypes: true });
+  const names = [];
+  for (const entry of entries) {
+    if (!entry.isDirectory() || entry.name.startsWith(".")) continue;
+    if (await exists(join(skillsRoot, entry.name, "SKILL.md"))) names.push(entry.name);
+  }
+  return names.sort();
+}
+
+async function installAllSkills() {
+  const names = await toolkitSkillNames();
+  let changed = 0;
+  for (const name of names) {
+    const didChange = await syncDirectory(
+      join(packageRoot, "skills", name),
+      join(codexHome, "skills", name),
+      join("skills", name),
+    );
+    if (didChange) changed += 1;
+  }
+  return { names, changed };
+}
+
+async function installMissionControl({ includeSkill = true } = {}) {
+  let changed = 0;
+  const skillName = "delegate-with-mission-cards";
+  if (includeSkill) {
+    if (
+      await syncDirectory(
+        join(packageRoot, "skills", skillName),
+        join(codexHome, "skills", skillName),
+        join("skills", skillName),
+      )
+    ) {
+      changed += 1;
+    }
+  }
+
+  for (const role of missionControlAgents) {
+    if (
+      await syncFile(
+        join(packageRoot, "agents", "mission-control", role.file),
+        join(codexHome, "agents", role.file),
+        join("agents", role.file),
+      )
+    ) {
+      changed += 1;
+    }
+  }
+  return changed;
+}
+
+, "m").test(text)) {
+      fail(`${role.name} has the wrong name field`);
+    }
+    if (!new RegExp(`^sandbox_mode\\s*=\\s*"${role.sandbox}"\\s*#!/usr/bin/env node
+
+import { createHash } from "node:crypto";
+import { spawnSync } from "node:child_process";
+import {
+  chmod,
+  cp,
+  mkdir,
+  readFile,
+  readdir,
+  rename,
+  rm,
+  stat,
+  writeFile,
+} from "node:fs/promises";
+import { homedir } from "node:os";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const packageRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
+const repository = "cmdr-chara/codex-toolkit";
+const stateDirectoryName = "codex-toolkit";
+const windowsDailyTask = "Codex Toolkit Auto Update";
+const windowsLogonTask = "Codex Toolkit Auto Update Logon";
+const macLabel = "dev.cmdr-chara.codex-toolkit-update";
+const linuxUnit = "codex-toolkit-update";
+const managedStart = "<!-- codex-toolkit:start -->";
+const managedEnd = "<!-- codex-toolkit:end -->";
+const missionControlAgents = [
+  { file: "pathfinder-reader.toml", name: "pathfinder-reader", sandbox: "read-only" },
+  { file: "patcher-writer.toml", name: "patcher-writer", sandbox: "workspace-write" },
+  { file: "investigator-reader.toml", name: "investigator-reader", sandbox: "read-only" },
+  { file: "builder-writer.toml", name: "builder-writer", sandbox: "workspace-write" },
+  { file: "sentinel-reader.toml", name: "sentinel-reader", sandbox: "read-only" },
+  { file: "architect-writer.toml", name: "architect-writer", sandbox: "workspace-write" },
+];
+const missionControlPinnedField =
+  /^(model|model_reasoning_effort|model_provider|service_tier)\s*=/m;
+
+const argv = process.argv.slice(2);
+const commands = new Set(["setup", "mission-control", "auto-update", "help"]);
+const command = argv[0] && commands.has(argv[0]) ? argv.shift() : "mission-control";
+
+function option(name) {
+  const index = argv.indexOf(name);
+  return index >= 0 ? argv[index + 1] : undefined;
+}
+
+function flag(name) {
+  return argv.includes(name);
+}
+
+const codexHomeArg = option("--codex-home");
+const codexHome = codexHomeArg || process.env.CODEX_HOME || join(homedir(), ".codex");
+const dryRun = flag("--dry-run");
+const scheduled = flag("--scheduled");
+const noAutoUpdate = flag("--no-auto-update");
+const sourceRelease = option("--source-release");
+
+if (argv.includes("--codex-home") && !codexHomeArg) {
+  throw new Error("--codex-home requires a path");
+}
+if (argv.includes("--source-release") && !sourceRelease) {
+  throw new Error("--source-release requires a tag");
+}
+
+const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+const backupRoot = join(codexHome, "backups", `codex-toolkit-${stamp}`);
+const toolkitStateRoot = join(codexHome, stateDirectoryName);
+
+async function exists(path) {
+  try {
+    await stat(path);
+    return true;
+  } catch (error) {
+    if (error.code === "ENOENT") return false;
+    throw error;
+  }
+}
+
+async function readPackageVersion() {
+  const data = JSON.parse(await readFile(join(packageRoot, "package.json"), "utf8"));
+  if (!data.version || typeof data.version !== "string") {
+    throw new Error("package.json has no version");
+  }
+  return data.version;
+}
+
+async function walkFiles(root, relative = "") {
+  const current = relative ? join(root, relative) : root;
+  const info = await stat(current);
+  if (info.isFile()) return [relative];
+  const entries = await readdir(current, { withFileTypes: true });
+  const files = [];
+  for (const entry of entries.sort((a, b) => a.name.localeCompare(b.name))) {
+    const child = relative ? join(relative, entry.name) : entry.name;
+    if (entry.isDirectory()) {
+      files.push(...(await walkFiles(root, child)));
+    } else if (entry.isFile() || entry.isSymbolicLink()) {
+      files.push(child);
+    }
+  }
+  return files;
+}
+
+async function treeDigest(path) {
+  const hash = createHash("sha256");
+  const files = await walkFiles(path);
+  for (const relative of files) {
+    hash.update(relative.replaceAll("\\", "/"));
+    hash.update("\0");
+    hash.update(await readFile(join(path, relative)));
+    hash.update("\0");
+  }
+  return hash.digest("hex");
+}
+
+async function backup(path, relativeTarget) {
+  if (!(await exists(path))) return false;
+  const destination = join(backupRoot, relativeTarget);
+  if (dryRun) {
+    console.log(`[dry-run] backup ${path} -> ${destination}`);
+    return true;
+  }
+  await mkdir(dirname(destination), { recursive: true });
+  await rename(path, destination);
+  return true;
+}
+
+async function syncDirectory(source, target, relativeTarget) {
+  if (await exists(target)) {
+    const [sourceDigest, targetDigest] = await Promise.all([
+      treeDigest(source),
+      treeDigest(target),
+    ]);
+    if (sourceDigest === targetDigest) return false;
+    await backup(target, relativeTarget);
+  }
+  if (dryRun) {
+    console.log(`[dry-run] install ${source} -> ${target}`);
+    return true;
+  }
+  await mkdir(dirname(target), { recursive: true });
+  await cp(source, target, { recursive: true });
+  return true;
+}
+
+async function syncFile(source, target, relativeTarget) {
+  if (await exists(target)) {
+    const [sourceBytes, targetBytes] = await Promise.all([
+      readFile(source),
+      readFile(target),
+    ]);
+    if (sourceBytes.equals(targetBytes)) return false;
+    await backup(target, relativeTarget);
+  }
+  if (dryRun) {
+    console.log(`[dry-run] install ${source} -> ${target}`);
+    return true;
+  }
+  await mkdir(dirname(target), { recursive: true });
+  await cp(source, target);
+  return true;
+}
+
+async function toolkitSkillNames() {
+  const skillsRoot = join(packageRoot, "skills");
+  const entries = await readdir(skillsRoot, { withFileTypes: true });
+  const names = [];
+  for (const entry of entries) {
+    if (!entry.isDirectory() || entry.name.startsWith(".")) continue;
+    if (await exists(join(skillsRoot, entry.name, "SKILL.md"))) names.push(entry.name);
+  }
+  return names.sort();
+}
+
+async function installAllSkills() {
+  const names = await toolkitSkillNames();
+  let changed = 0;
+  for (const name of names) {
+    const didChange = await syncDirectory(
+      join(packageRoot, "skills", name),
+      join(codexHome, "skills", name),
+      join("skills", name),
+    );
+    if (didChange) changed += 1;
+  }
+  return { names, changed };
+}
+
+async function installMissionControl({ includeSkill = true } = {}) {
+  let changed = 0;
+  const skillName = "delegate-with-mission-cards";
+  if (includeSkill) {
+    if (
+      await syncDirectory(
+        join(packageRoot, "skills", skillName),
+        join(codexHome, "skills", skillName),
+        join("skills", skillName),
+      )
+    ) {
+      changed += 1;
+    }
+  }
+
+  for (const role of missionControlAgents) {
+    if (
+      await syncFile(
+        join(packageRoot, "agents", "mission-control", role.file),
+        join(codexHome, "agents", role.file),
+        join("agents", role.file),
+      )
+    ) {
+      changed += 1;
+    }
+  }
+  return changed;
+}
+
+, "m").test(text)) {
+      fail(`${role.name} has the wrong sandbox_mode`);
+    }
+    if (missionControlPinnedField.test(text)) {
+      fail(`${role.name} pins model/provider/reasoning settings`);
+    }
+  }
+
+  const agentsPath = join(codexHome, "AGENTS.md");
+  if (await exists(agentsPath)) {
+    const current = await readFile(agentsPath, "utf8");
+    const starts = current.split(managedStart).length - 1;
+    const ends = current.split(managedEnd).length - 1;
+    if (starts === 0 && ends === 0) {
+      note("Toolkit managed routing is not installed; Mission Control-only installation is still valid");
+    } else if (starts !== 1 || ends !== 1) {
+      fail(`AGENTS.md has malformed toolkit markers (${starts} start, ${ends} end)`);
+    } else {
+      const start = current.indexOf(managedStart) + managedStart.length;
+      const end = current.indexOf(managedEnd, start);
+      const installed = current.slice(start, end).trim();
+      const expected = (await readFile(join(packageRoot, "orchestration", "managed-agents.md"), "utf8")).trim();
+      if (installed === expected) pass("Managed routing block is current");
+      else fail("Managed routing block differs from this toolkit release");
+    }
+  } else {
+    note("AGENTS.md is absent; Mission Control-only installation is still valid");
+  }
+
+  const workflowTarget = join(codexHome, "codex-toolkit", "workflows.md");
+  if (await exists(workflowTarget)) {
+    const [sourceBytes, targetBytes] = await Promise.all([
+      readFile(join(packageRoot, "orchestration", "workflows.md")),
+      readFile(workflowTarget),
+    ]);
+    if (sourceBytes.equals(targetBytes)) pass("Workflow catalog is current");
+    else fail("Workflow catalog differs from this toolkit release");
+  } else {
+    note("Workflow catalog is not installed; full setup installs it");
+  }
+
+  console.log(
+    `Mission Control check: ${failures.length ? "FAIL" : "PASS"} (${failures.length} failure(s), ${notes.length} note(s))`,
+  );
+  return failures.length === 0;
 }
 
 function run(commandName, args, { allowFailure = false, input } = {}) {
@@ -592,6 +1121,9 @@ Usage:
   npx --yes github:cmdr-chara/codex-toolkit setup
       Install all toolkit skills + Mission Control and enable automatic updates.
 
+  npx --yes github:cmdr-chara/codex-toolkit mission-control check
+      Verify the installed Mission Control roles, portability, and routing state.
+
   npx --yes github:cmdr-chara/codex-toolkit auto-update status
   npx --yes github:cmdr-chara/codex-toolkit auto-update install
   npx --yes github:cmdr-chara/codex-toolkit auto-update remove
@@ -616,16 +1148,23 @@ if (command === "help" || flag("--help") || flag("-h")) {
   else if (action === "remove") await removeAutoUpdate();
   else if (action === "status") await showAutoUpdateStatus();
   else throw new Error(`unknown auto-update action: ${action}`);
-} else {
-  const changed = await installMissionControl({ includeSkill: true });
-  console.log(`Mission Control synchronized in ${codexHome}`);
-  if (changed) {
-    console.log(`Changed surfaces: ${changed}`);
-    if (!dryRun && (await exists(backupRoot))) {
-      console.log(`Previous files backed up to ${backupRoot}`);
+} else if (command === "mission-control") {
+  const action = argv[0] && !argv[0].startsWith("-") ? argv[0] : "install";
+  if (action === "check") {
+    if (!(await checkMissionControl())) process.exitCode = 1;
+  } else if (action === "install") {
+    const changed = await installMissionControl({ includeSkill: true });
+    console.log(`Mission Control synchronized in ${codexHome}`);
+    if (changed) {
+      console.log(`Changed surfaces: ${changed}`);
+      if (!dryRun && (await exists(backupRoot))) {
+        console.log(`Previous files backed up to ${backupRoot}`);
+      }
+    } else {
+      console.log("Mission Control was already current.");
     }
+    console.log("Start a fresh Codex task to load the skill and agents.");
   } else {
-    console.log("Mission Control was already current.");
+    throw new Error(`unknown mission-control action: ${action}`);
   }
-  console.log("Start a fresh Codex task to load the skill and agents.");
 }
